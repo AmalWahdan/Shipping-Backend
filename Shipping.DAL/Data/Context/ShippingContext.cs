@@ -20,13 +20,11 @@ namespace Shipping.DAL.Data
         public DbSet<DeliverToVillage> DeliverToVillages => Set<DeliverToVillage>();
         public DbSet<Weight> Weights => Set<Weight>();
         public DbSet<RepresentativeGovernate> RepresentativeGovernates => Set<RepresentativeGovernate>();
-        
         public DbSet<ReasonsRefusalType> ReasonsRefusalTypes => Set<ReasonsRefusalType>();
         public ShippingContext(DbContextOptions options) : base(options)
 		{
 
 		}
-
 
         List<Permission> permissions = new List<Permission>()
         {
@@ -106,13 +104,25 @@ namespace Shipping.DAL.Data
 
 
         };
-      
 
+        Weight weight = new Weight()
+        {
+            Id = 1,
+            DefaultWeight = 10,
+            AdditionalPrice = 30
+        };
+
+        DeliverToVillage deliverToVillage = new DeliverToVillage()
+        {
+            Id = 1,
+            AdditionalCost = 20
+        };
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
             modelBuilder.Entity<Permission>().HasData(permissions);
-
+            modelBuilder.Entity<Weight>().HasData(weight);
+            modelBuilder.Entity<DeliverToVillage>().HasData(deliverToVillage);
             base.OnModelCreating(modelBuilder);
 
 			modelBuilder.Entity<ApplicationUser>()

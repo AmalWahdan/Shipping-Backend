@@ -315,6 +315,13 @@ namespace Shipping.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DeliverToVillages");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AdditionalCost = 20.0
+                        });
                 });
 
             modelBuilder.Entity("Shipping.DAL.Data.Models.Governorate", b =>
@@ -709,6 +716,14 @@ namespace Shipping.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Weights");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AdditionalPrice = 30.0,
+                            DefaultWeight = 10.0
+                        });
                 });
 
             modelBuilder.Entity("Shipping.DAL.Data.Models.Employee", b =>

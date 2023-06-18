@@ -57,18 +57,20 @@ namespace Shipping.BLL
             }
             return 0;
         }
-        public async Task<IEnumerable<AddReasonsRefusalTypeDtos>> GetAll()
+        public async Task<IEnumerable<ShowReasonsRefusalTypeDtos>> GetAll()
         {
 
             var result = await _reasonsRepository.GetAllAsync();
 
             var nonDeletedReasons = result.Where(b => !b.isDeleted);
-            return nonDeletedReasons.Select(s => new AddReasonsRefusalTypeDtos
-            {
+            return nonDeletedReasons.Select(s => new ShowReasonsRefusalTypeDtos
+            { Id =s.Id,
                 Name = s.Name,
+                isDeleted = s.isDeleted
             }).ToList();
 
         }
+
         public async Task<AddReasonsRefusalTypeDtos> GetById(int id)
         {
             var reasonsRefusalType = await _reasonsRepository.GetByCriteriaAsync(r => r.Id == id && r.isDeleted == false);

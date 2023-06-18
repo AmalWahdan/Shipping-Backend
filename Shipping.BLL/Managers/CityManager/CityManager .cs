@@ -24,16 +24,18 @@ namespace Shipping.BLL.Managers
         }
         public async Task<IEnumerable<ShowCityDto>> GetAllCityWithDeletedAsync()
         {
-            var cities = await _cityRepository.GetAllAsync();
-            var governorates = await _governorateRepository.GetAllAsync();
+            var cities = _cityRepository.GetAllAsync().Result.Include(c=>c.Governorate);
+         
 
             return cities.Select(c => new ShowCityDto
             {
+                id=c.Id,
                 Name = c.Name,
                 Price = c.Price,
                 Pickup = c.Pickup,
                 IsDeleted = c.isDeleted,
-                GovernorateName = governorates.FirstOrDefault(g => g.Id == c.GovernorateId).Name
+                GovernorateId = c.GovernorateId,
+                GovernorateName =c.Governorate.Name
             });
         }
         public async Task<int> CreateCityAsync(AddCityDto cityDto)

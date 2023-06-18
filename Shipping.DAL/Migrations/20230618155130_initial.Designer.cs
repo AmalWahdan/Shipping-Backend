@@ -12,8 +12,8 @@ using Shipping.DAL.Data;
 namespace Shipping.DAL.Migrations
 {
     [DbContext(typeof(ShippingContext))]
-    [Migration("20230618001750_init")]
-    partial class init
+    [Migration("20230618155130_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -318,6 +318,13 @@ namespace Shipping.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DeliverToVillages");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AdditionalCost = 20.0
+                        });
                 });
 
             modelBuilder.Entity("Shipping.DAL.Data.Models.Governorate", b =>
@@ -712,6 +719,14 @@ namespace Shipping.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Weights");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AdditionalPrice = 30.0,
+                            DefaultWeight = 10.0
+                        });
                 });
 
             modelBuilder.Entity("Shipping.DAL.Data.Models.Employee", b =>
