@@ -425,6 +425,7 @@ namespace Shipping.BLL.Managers
             }
             return _orderRepository.GetOrdersForMerchant(searchText,merchantId, statusId, pageNumer, pageSize).Select(o => new ReadOrderDto
             {
+                Id= o.Id,
                 ClientName = o.ClientName,
                 Date = o.Date,
                 Governorate = o.Governorate!.Name,

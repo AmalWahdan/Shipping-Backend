@@ -12,8 +12,8 @@ using Shipping.DAL.Data;
 namespace Shipping.DAL.Migrations
 {
     [DbContext(typeof(ShippingContext))]
-    [Migration("20230617123347_seciond")]
-    partial class seciond
+    [Migration("20230618001750_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -335,9 +335,6 @@ namespace Shipping.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("status")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.ToTable("Governorates");
@@ -350,6 +347,9 @@ namespace Shipping.DAL.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -495,12 +495,67 @@ namespace Shipping.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Permission"
+                            Name = "Branch"
                         },
                         new
                         {
                             Id = 2,
                             Name = "City"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Governorate"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Employee"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Representative"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Merchant"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Order"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "OrderReports"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Group"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "ReasonsRefusalType"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "ShippingType"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "DeliverToVillage"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Name = "Weight"
                         });
                 });
 
@@ -764,7 +819,7 @@ namespace Shipping.DAL.Migrations
             modelBuilder.Entity("Shipping.DAL.Data.Models.ApplicationUser", b =>
                 {
                     b.HasOne("Shipping.DAL.Data.Models.Branch", "branch")
-                        .WithMany()
+                        .WithMany("ApplicationUsers")
                         .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -934,6 +989,8 @@ namespace Shipping.DAL.Migrations
 
             modelBuilder.Entity("Shipping.DAL.Data.Models.Branch", b =>
                 {
+                    b.Navigation("ApplicationUsers");
+
                     b.Navigation("Orders");
                 });
 

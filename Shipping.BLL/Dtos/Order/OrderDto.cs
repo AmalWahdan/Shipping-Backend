@@ -123,6 +123,7 @@ namespace Shipping.BLL.Dtos
     }
     public record ReadOrderDto
     {
+        public int Id { get; set; }
         public DateTime Date { get; set; }
         public string ClientName { get; set; } = string.Empty;
         public string Governorate { get; set; } = string.Empty;

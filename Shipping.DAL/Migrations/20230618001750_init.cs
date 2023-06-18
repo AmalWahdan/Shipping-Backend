@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Shipping.DAL.Migrations
 {
     /// <inheritdoc />
@@ -61,8 +63,7 @@ namespace Shipping.DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    status = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,6 +77,7 @@ namespace Shipping.DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -503,6 +505,26 @@ namespace Shipping.DAL.Migrations
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.InsertData(
+                table: "Permissions",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Branch" },
+                    { 2, "City" },
+                    { 3, "Governorate" },
+                    { 4, "Employee" },
+                    { 5, "Representative" },
+                    { 6, "Merchant" },
+                    { 7, "Order" },
+                    { 8, "OrderReports" },
+                    { 9, "Group" },
+                    { 10, "ReasonsRefusalType" },
+                    { 11, "ShippingType" },
+                    { 12, "DeliverToVillage" },
+                    { 13, "Weight" }
                 });
 
             migrationBuilder.CreateIndex(

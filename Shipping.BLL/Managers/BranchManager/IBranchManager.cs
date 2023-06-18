@@ -14,7 +14,7 @@ namespace Shipping.BLL.Managers
        
             Task<ShowBranchDto> GetBranchByIdAsync(int id);
             Task<Pagination<ShowBranchDto>> GetAllBranchesAsync(GSpecParams branchSpecParams);
-            Task<IEnumerable<ShowBranchDto>> GetAllBranchesWithDeletedAsync();
+            Task<IEnumerable<ShowBranchDto>> GetAllAsync();
             Task<int> CreateBranchAsync(AddBranchDto branchDto);
             Task<int> UpdateBranchAsync(UpdateBranchDto branchDto);
             Task<int> DeleteBranchAsync(int id);

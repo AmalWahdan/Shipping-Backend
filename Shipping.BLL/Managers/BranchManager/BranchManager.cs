@@ -68,9 +68,9 @@ namespace Shipping.BLL.Managers
         }
 
 
-        public async Task<IEnumerable<ShowBranchDto>> GetAllBranchesWithDeletedAsync()
+        public async Task<IEnumerable<ShowBranchDto>> GetAllAsync()
         {
-            var Branches = await _branchRepository.GetAllAsync();
+            var Branches = _branchRepository.GetAllAsync().Result.Where(b=>b.isDeleted==false && b.status==true);
             return Branches.Select(b => new ShowBranchDto
             {
                 Id = b.Id,

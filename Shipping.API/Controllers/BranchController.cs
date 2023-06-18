@@ -40,9 +40,9 @@ namespace Shipping.API.Controllers
 
       
         [HttpGet("all")]
-        public async Task<ActionResult> GetAllWithDeleted()
+        public async Task<ActionResult> GetAll()
         {
-            var branches = await _branchManager.GetAllBranchesWithDeletedAsync();
+            var branches = await _branchManager.GetAllAsync();
             return Ok(branches);
         }
 

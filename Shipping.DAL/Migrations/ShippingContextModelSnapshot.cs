@@ -492,12 +492,67 @@ namespace Shipping.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Permission"
+                            Name = "Branch"
                         },
                         new
                         {
                             Id = 2,
                             Name = "City"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Governorate"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Employee"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Representative"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Merchant"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Order"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "OrderReports"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Group"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "ReasonsRefusalType"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "ShippingType"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "DeliverToVillage"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Name = "Weight"
                         });
                 });
 
