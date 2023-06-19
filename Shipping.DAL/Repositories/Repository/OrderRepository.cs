@@ -72,6 +72,8 @@ namespace Shipping.DAL.Repositories
                     .Include(gov => gov.Governorate)
                     .Include(city => city.City)
                     .Include(product=>product.Products)
+                    .Include(ship=>ship.ShippingType)
+                    .Include(branch=>branch.Branch)
                     .FirstOrDefault(o => o.Id == orderId);
                 if (order != null)
                 {
@@ -168,6 +170,23 @@ namespace Shipping.DAL.Repositories
             return _context.Orders
                 .Where(o => o.orderStatus == (OrderStatus)statusId && o.MerchantId == merchantId && o.isDeleted == false && o.ClientName.StartsWith(searchText))
                 .Count();
+        }
+        public int GetCountOrdersForRepresentative(string representativeId, string searchText)
+        {
+            return _context.Orders
+               .Where(o => o.orderStatus == OrderStatus.RepresentitiveDelivered && o.isDeleted == false && o.RepresentativeId == representativeId && o.ClientName.StartsWith(searchText))
+               .Count();
+        }
+
+        public IEnumerable<Order> GetOrdersForRepresentative(string representativeId, int pageNumer, int pageSize, string searchText)
+        {
+            return _context.Orders
+                .Where(o => o.orderStatus == OrderStatus.RepresentitiveDelivered && o.isDeleted == false && o.RepresentativeId == representativeId && o.ClientName.StartsWith(searchText))
+                .Skip((pageNumer - 1) * pageSize)
+                .Take(pageSize)
+                .Include(gover => gover.Governorate)
+                .Include(city => city.City)
+                .AsNoTracking();
         }
 
 

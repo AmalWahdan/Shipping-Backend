@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Shipping.BLL.Dtos;
+using Shipping.BLL.Dtos.RepresentativeDtos;
 using Shipping.DAL;
 using Shipping.DAL.Data;
 using Shipping.DAL.Data.Models;
@@ -25,8 +27,22 @@ namespace Shipping.BLL.Managers
         private readonly IRepository<Weight> _weightRepository;
         private readonly IRepository<City> _cityRepository;
         private readonly IRepository<SpecialPrice> _specialPriceRepository;
+        private readonly IRepository<Representative> _representativeRepo;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IRepository<Governorate> _governorateRepository;
+        private readonly IRepository<RepresentativeGovernate> _representativeGovernateRepository;
 
-        public OrderManager(IOrderRepository orderRepository, IProductRepository productRepository, IRepository<ShippingType> shippingRepository, IRepository<DeliverToVillage> deliverToVillageRepository, IRepository<Weight> weightRepository, IRepository<City> cityRepository, IRepository<SpecialPrice> specialPriceRepository)
+        public OrderManager(IOrderRepository orderRepository,
+            IProductRepository productRepository,
+            IRepository<ShippingType> shippingRepository,
+            IRepository<DeliverToVillage> deliverToVillageRepository,
+            IRepository<Weight> weightRepository,
+            IRepository<City> cityRepository,
+            IRepository<SpecialPrice> specialPriceRepository,
+            IRepository<Representative> representativeRepo,
+            UserManager<ApplicationUser> userManager,
+            IRepository<Governorate> governorateRepository ,
+            IRepository<RepresentativeGovernate> representativeGovernateRepository)
         {
             this._orderRepository = orderRepository;
             this._productRepository = productRepository;
@@ -35,6 +51,10 @@ namespace Shipping.BLL.Managers
             this._weightRepository = weightRepository;
             this._cityRepository = cityRepository;
             this._specialPriceRepository = specialPriceRepository;
+            this._representativeRepo = representativeRepo;
+            this._userManager = userManager;
+            this._governorateRepository = governorateRepository;
+            this._representativeGovernateRepository = representativeGovernateRepository;
         }
 
         public async Task<bool> Add(AddOrderDto orderDto)
@@ -453,6 +473,107 @@ namespace Shipping.BLL.Managers
             return _orderRepository.GetCountOrdersForMerchant(merchantId, statusId,searchText);
         }
 
-        
+
+        public bool ChangeStatus(int OrderId, OrderStatus status)
+        {
+            var order = _orderRepository.GetById(OrderId);
+            if (order == null)
+            {
+                return false;
+            }
+            else
+            {
+                order.orderStatus = status;
+                _orderRepository.SaveChanges();
+                return true;
+            }
+        }
+
+        public bool SelectRepresentative(int OrderId, string representativeId)
+        {
+            var order = _orderRepository.GetById(OrderId);
+            if (order == null)
+            {
+                return false;
+            }
+            else
+            {
+                order.RepresentativeId = representativeId;
+                order.orderStatus = OrderStatus.RepresentitiveDelivered;
+                _orderRepository.SaveChanges();
+                return true;
+            }
+        }
+
+        public int GetCountOrdersForRepresentative(string representativeId, string searchText)
+        {
+            return _orderRepository.GetCountOrdersForRepresentative(representativeId, searchText);
+        }
+
+        public IEnumerable<ReadOrderDto> GetOrdersForRepresentative(string representativeId, int pageNumer, int pageSize, string searchText)
+        {
+            return _orderRepository.GetOrdersForRepresentative(representativeId, pageNumer, pageSize, searchText).Select(o => new ReadOrderDto
+            {
+                Id = o.Id,
+                ClientName = o.ClientName,
+                Date = o.Date,
+                Governorate = o.Governorate!.Name,
+                City = o.City!.Name,
+                Cost = o.ProductTotalCost + o.OrderShippingTotalCost
+
+            });
+        }
+
+        public async Task<List<DropdownListRepresentativeDto>> DropdownListRepresentativeAsync(int orderId)
+        {
+            var governorateId = _orderRepository.GetById(orderId)?.GovernorateId;
+
+            var representativeGovernate = await _representativeGovernateRepository.GetAllAsync();
+            var governorates = await _governorateRepository.GetAllAsync();
+            List<DropdownListRepresentativeDto> result = (from a in _userManager.Users
+                                                          join b in representativeGovernate  on a.Id equals b.RepresentativeId
+                                                          join c in governorates on b.GovernorateId equals governorateId
+                                                          select new DropdownListRepresentativeDto { Name = a.Name, Id = a.Id }).Distinct().ToList();
+
+
+            return result;
+
+
+        }
+
+        public ReadAllOrderDataDto GetAllDataById(int orderId)
+        {
+            var order = _orderRepository.GetById(orderId);
+            
+            if (order != null)
+            {
+                ReadAllOrderDataDto result = new ReadAllOrderDataDto()
+                {
+                    PaymentType = order.PaymentType,
+                    Email = order.Email,
+                    Branch = order.Branch!.Name,
+                    City = order.City!.Name,
+                    DeliverToVillage = order.DeliverToVillage ?? false,
+                    FirstPhoneNumber = order.FirstPhoneNumber,
+                    SecondPhoneNumber = order.SecondPhoneNumber!,
+                    Governorate = order.Governorate!.Name,
+                    Notes = order.Notes,
+                    ShippingType = order.ShippingType!.Name,
+                    orderType = order.orderType,
+                    Street = order.Street,
+                    ClientName = order.ClientName,
+                    Products = order.Products.Select(prod => new ProductDto
+                    {
+                        Name = prod.Name,
+                        Quantity = prod.Quantity,
+                        Price = prod.Price,
+                        Weight = prod.Weight,
+                    }).ToList()
+                };
+                return result;
+            }
+
+            return null;
+        }
     }
 }

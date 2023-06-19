@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Shipping.BLL;
 using Shipping.BLL.Dtos;
 using Shipping.DAL.Data.Models;
@@ -141,6 +142,73 @@ namespace Shipping.API.Controllers
         public ActionResult<int> GetCountOrdersForMerchant(string merchantId, int statusId, string searchText = "")
         {
             return Ok(_orderManager.GetCountOrdersForMerchant(merchantId, statusId, searchText));
+        }
+
+
+        [HttpPut]
+        [Route("ChangeStatus")]
+        public ActionResult ChangeStatus(int orderId, OrderStatus status)
+        {
+            bool result = _orderManager.ChangeStatus(orderId, status);
+            if (result)
+            {
+                return Ok(new { message = "Changed Successfully" });
+
+            }
+            return BadRequest(new { message = "Item not found" });
+        }
+
+        [HttpPut]
+        [Route("SelectRepresentative")]
+        public ActionResult SelectRepresentative(int orderId, string representativeId)
+        {
+            bool result = _orderManager.SelectRepresentative(orderId, representativeId);
+            if (result)
+            {
+                return Ok(new { message = "Selected Successfully" });
+
+            }
+            return BadRequest(new { message = "Item not found" });
+        }
+
+        //Orders For Representative
+        [HttpGet]
+        [Route("GetCountOrdersForRepresentative")]
+        public ActionResult<int> GetCountOrdersForRepresentative(string representativeId, string searchText = "")
+        {
+            return Ok(_orderManager.GetCountOrdersForRepresentative(representativeId, searchText));
+        }
+
+        [HttpGet]
+        [Route("GetOrdersForRepresentative")]
+        public ActionResult<IEnumerable<ReadOrderDto>> GetOrdersForRepresentative(string representativeId, int pageNubmer, int pageSize, string searchText = "")
+        {
+            return Ok(_orderManager.GetOrdersForRepresentative(representativeId, pageNubmer, pageSize, searchText));
+        }
+
+        [HttpGet("DropdownListRepresentative")]
+        public async Task<IActionResult> DropdownListRepresentative(int orderId)
+        {
+            try
+            {
+                return Ok(await _orderManager.DropdownListRepresentativeAsync(orderId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [Route("GetAllDataById")]
+        public ActionResult<ReadAllOrderDataDto> GetAllDataById(int id)
+        {
+            var order = _orderManager.GetAllDataById(id);
+            if (order != null)
+            {
+                return Ok(order);
+            }
+            return BadRequest(new { message = "Item not found" });
         }
     }
 } 

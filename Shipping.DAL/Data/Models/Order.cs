@@ -20,7 +20,7 @@ namespace Shipping.DAL.Data.Models
         ClientCanceled,
         RejectWithPaying,
         RejectWithPartialPaying,
-        RejectWithoutPaying,
+        RejectFromEmployee,
     }
     public enum PaymentType
     {
@@ -82,14 +82,17 @@ namespace Shipping.DAL.Data.Models
 
         [ForeignKey("Merchant")]
         public string MerchantId { get; set; }= string.Empty;
-    
+
+        [ForeignKey("Representative")]
+        public string? RepresentativeId { get; set; }
+
         public virtual ReasonsRefusalType? ReasonsRefusalType { get; set; }
         public virtual Governorate? Governorate { get; set; }
         public virtual City? City { get; set; }
         public virtual ShippingType? ShippingType { get; set; }
       
         public virtual Branch? Branch { get; set; }
-       
+        public virtual Representative? Representative { get; set; }
         public virtual Merchant? Merchant { get; set; }
         public virtual ICollection<Product> Products { get; set; } = new HashSet<Product>();
 

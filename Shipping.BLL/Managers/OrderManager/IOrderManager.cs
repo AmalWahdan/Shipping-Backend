@@ -1,4 +1,5 @@
 ﻿using Shipping.BLL.Dtos;
+using Shipping.BLL.Dtos.RepresentativeDtos;
 using Shipping.DAL.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -27,5 +28,15 @@ namespace Shipping.BLL
 
         int GetCountOrdersForEmployee(int statusId,string searchText);
         int GetCountOrdersForMerchant(string merchantId, int statusId, string searchText);
+
+
+        bool ChangeStatus(int OrderId, OrderStatus status);
+        bool SelectRepresentative(int OrderId, string representativeId);
+
+        int GetCountOrdersForRepresentative(string representativeId, string searchText);
+        IEnumerable<ReadOrderDto> GetOrdersForRepresentative(string representativeId, int pageNumer, int pageSize, string searchText);
+        Task<List<DropdownListRepresentativeDto>> DropdownListRepresentativeAsync(int orderId);
+
+        ReadAllOrderDataDto GetAllDataById(int orderId);
     }
 }

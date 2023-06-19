@@ -145,4 +145,23 @@ namespace Shipping.BLL.Dtos
         //public double Company { get; set; }
         public DateTime Date { get; set; }
     }
+
+    public record ReadAllOrderDataDto
+    {
+        public OrderType orderType { get; set; }
+
+        public string ClientName { get; set; } = string.Empty;
+        public string FirstPhoneNumber { get; set; }
+        public string SecondPhoneNumber { get; set; }
+        public string Email { get; set; } = string.Empty;
+        public string Governorate { get; set; }
+        public string City { get; set; }
+        public string Street { get; set; } = string.Empty;
+        public bool DeliverToVillage { get; set; }
+        public string ShippingType { get; set; }
+        public PaymentType PaymentType { get; set; }
+        public string Branch { get; set; }
+        public string? Notes { get; set; }
+        public List<ProductDto> Products { get; set; }
+    }
 }

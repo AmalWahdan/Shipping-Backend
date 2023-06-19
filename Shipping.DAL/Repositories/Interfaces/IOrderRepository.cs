@@ -28,6 +28,9 @@ namespace Shipping.DAL.Repositories
         int GetCountOrdersForMerchant(string merchantId, int statusId, string searchText);
 
 
+        int GetCountOrdersForRepresentative(string representativeId, string searchText);
+        IEnumerable<Order> GetOrdersForRepresentative(string representativeId, int pageNumer, int pageSize, string searchText);
+
         bool SaveChanges();
 
         
