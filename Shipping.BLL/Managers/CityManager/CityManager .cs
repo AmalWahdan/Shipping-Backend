@@ -38,6 +38,22 @@ namespace Shipping.BLL.Managers
                 GovernorateName =c.Governorate.Name
             });
         }
+        public async Task<UpdateCityDto> GetCityAsync(int id)
+        {
+            var city = await _cityRepository.GetByIdAsync(id);
+            if (city == null)
+            {
+                return null;
+            }
+            return new UpdateCityDto
+            {
+                Id = city.Id,
+                Name = city.Name,
+                Pickup = city.Pickup,
+                Price = city.Price,
+                GovernorateId = city.GovernorateId
+            };
+        }
         public async Task<int> CreateCityAsync(AddCityDto cityDto)
         {
             var governorate = await _governorateRepository.GetByCriteriaAsync(g => g.Id == cityDto.GovernorateId && g.IsDeleted == false);

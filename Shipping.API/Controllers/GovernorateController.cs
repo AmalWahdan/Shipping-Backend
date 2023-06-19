@@ -30,6 +30,12 @@ namespace Shipping.API.Controllers
             var governorates = await _governorateManager.GetAllGovernorateWithCityAsync();
             return Ok(governorates);
         }
+        [HttpGet("allCitiesWithGovernorate")]
+        public async Task<ActionResult<IEnumerable<UpdateGovernorateDto>>> GetAllWithCities()
+        {
+            var governorates = await _governorateManager.GetAllGovernorateWithCitiesAsync();
+            return Ok(governorates);
+        }
 
         [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<ShowGovernorateDto>>> GetAllWithDeleted([FromQuery] GSpecParams govSpecParams)
