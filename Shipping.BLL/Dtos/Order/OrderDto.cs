@@ -62,8 +62,6 @@ namespace Shipping.BLL.Dtos
         [Required(ErrorMessage = "Enter at least one Product.")]
         public List<ProductDto> Products { get; set; }
     }
-
-
     public record UpdateOrderDto
     {
         [Required(ErrorMessage = "Order Id is required.")]
@@ -131,7 +129,6 @@ namespace Shipping.BLL.Dtos
         public double Cost { get; set; }
         public OrderStatus orderStatus { get; set; } 
     }
-
     public record ReadOrderReportsDto
     {
         public OrderStatus orderStatus { get; set; }
@@ -145,7 +142,6 @@ namespace Shipping.BLL.Dtos
         //public double Company { get; set; }
         public DateTime Date { get; set; }
     }
-
     public record ReadAllOrderDataDto
     {
         public OrderType orderType { get; set; }
@@ -164,4 +160,7 @@ namespace Shipping.BLL.Dtos
         public string? Notes { get; set; }
         public List<ProductDto> Products { get; set; }
     }
+
+    public record AddOrderResultDto(bool IsSuccesfull, double? ProductTotalCost, double? OrderShippingTotalCost,double? totalWeight);
+
 }

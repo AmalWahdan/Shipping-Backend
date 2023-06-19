@@ -57,7 +57,7 @@ namespace Shipping.BLL.Managers
             this._representativeGovernateRepository = representativeGovernateRepository;
         }
 
-        public async Task<bool> Add(AddOrderDto orderDto)
+        public async Task<AddOrderResultDto> Add(AddOrderDto orderDto)
         {
 
             double costDeliverToVillage = await Cost_DeliverToVillageAsync(orderDto.DeliverToVillage);
@@ -96,7 +96,7 @@ namespace Shipping.BLL.Managers
                 Notes = orderDto.Notes,
                 isDeleted = false,
                 ProductTotalCost = costAllProducts,
-                OrderShippingTotalCost = costDeliverToVillage + costAddititonalWeight + cityShippingPrice + costShippingType,// check if has special price
+                OrderShippingTotalCost = costDeliverToVillage + costAddititonalWeight + cityShippingPrice + costShippingType,
                 Weight = countWeight,
                 Products = orderDto.Products.Select(prod => new Product
                 {
@@ -108,7 +108,6 @@ namespace Shipping.BLL.Managers
                 }).ToList(),
             };
 
-
             bool isSuccesfullOrder = _orderRepository.Add(order);
             bool isSuccesfullProduct = _productRepository.AddRange(order.Products.ToList());
             if (isSuccesfullOrder && isSuccesfullProduct)
@@ -116,10 +115,12 @@ namespace Shipping.BLL.Managers
                 bool isSaved = _orderRepository.SaveChanges();
                 if (isSaved)
                 {
-                    return true;
+                    double shippingTotalCost = costDeliverToVillage + costAddititonalWeight + cityShippingPrice + costShippingType;
+
+                    return new AddOrderResultDto(true, costAllProducts,shippingTotalCost,countWeight);
                 }
             }
-            return false;
+            return new AddOrderResultDto(false,null,null,null);
 
         }
 

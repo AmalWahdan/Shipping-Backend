@@ -18,12 +18,12 @@ namespace Shipping.API.Controllers
         }
 
         [HttpPost] 
-        public async Task<ActionResult> Add(AddOrderDto order)
+        public async Task<ActionResult<AddOrderResultDto>> Add(AddOrderDto order)
         {
             var result = await _orderManager.Add(order);
-            if (result && ModelState.IsValid)
+            if (result.IsSuccesfull && ModelState.IsValid)
             {
-                return Ok(new { message = "Order was added successfully." });
+                return Ok(new { message = "Order was added successfully.",result });
             }
             ModelState.AddModelError("save", "Can't save Order may be some ID'S wrong!");
             return BadRequest(ModelState);

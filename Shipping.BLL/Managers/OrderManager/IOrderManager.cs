@@ -11,7 +11,7 @@ namespace Shipping.BLL
 {
     public interface IOrderManager
     {
-        Task<bool> Add(AddOrderDto order);
+        Task<AddOrderResultDto> Add(AddOrderDto order);
         Task<bool> Update(UpdateOrderDto order);
         bool Delete(int order);
         IEnumerable<ReadOrderReportsDto> GetAll(int pageNumer, int pageSize);
