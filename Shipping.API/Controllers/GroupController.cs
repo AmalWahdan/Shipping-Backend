@@ -73,11 +73,11 @@ namespace Shipping.API.Controllers
             }
             if (result == -1)
             {
-                return Ok(new { Message = "Delete Cities First" });
+                return Ok(new { Message = "Delete Employee First" });
 
             }
 
-            return Ok();
+            return Ok(new { Message = "Group Deleted Successfully" });
         }
     }
 }
