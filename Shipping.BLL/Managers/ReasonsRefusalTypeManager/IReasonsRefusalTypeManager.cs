@@ -10,7 +10,7 @@ namespace Shipping.BLL
 {
     public interface IReasonsRefusalTypeManager
     {
-        Task<IEnumerable<AddReasonsRefusalTypeDtos>> GetAll();
+        Task<IEnumerable<ShowReasonsRefusalTypeDtos>> GetAll();
         Task<AddReasonsRefusalTypeDtos> GetById(int id);
         Task<int> Add(AddReasonsRefusalTypeDtos entity);
         Task<int> Update(UpdateReasonsRefusalTypeDtos entity);

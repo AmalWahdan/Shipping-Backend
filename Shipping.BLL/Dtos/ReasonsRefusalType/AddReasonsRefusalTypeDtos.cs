@@ -12,6 +12,15 @@ namespace Shipping.BLL.Dtos
         [Required(ErrorMessage = "Name is required.")]
         public string Name { get; set; } = string.Empty;
     }
+
+    public record ShowReasonsRefusalTypeDtos
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public bool isDeleted { get; set; } 
+    }
+  
+
     public record UpdateReasonsRefusalTypeDtos
     {
         [Required(ErrorMessage = "Id is required.")]

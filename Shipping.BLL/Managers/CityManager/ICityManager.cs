@@ -15,5 +15,6 @@ namespace Shipping.BLL.Managers
         Task<int> CreateCityAsync(AddCityDto   cityDto);
         Task<int> UpdateCityAsync(UpdateCityDto cityDto);
         Task<int> DeleteCityAsync(int id);
+        Task<UpdateCityDto> GetCityAsync(int id);
     }
 }

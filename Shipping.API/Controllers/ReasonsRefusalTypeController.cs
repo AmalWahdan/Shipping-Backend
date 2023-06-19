@@ -67,7 +67,7 @@ namespace Shipping.API.Controllers
 
         [HttpGet]
         [Route("GetAll")]
-        public async Task<ActionResult<IEnumerable<AddReasonsRefusalTypeDtos>>> GetAll()
+        public async Task<ActionResult<IEnumerable<ShowReasonsRefusalTypeDtos>>> GetAll()
         {
             var reasons = await _reasonsTypeManager.GetAll();
             return Ok(reasons);

@@ -18,6 +18,28 @@ namespace Shipping.BLL.Managers
             _governorateRepository = governorateRepository;
         }
 
+        public async Task<IEnumerable<ReadGovernoratesDto>> GetAllGovernorateWithCitiesAsync()
+        {
+            var result = await _governorateRepository.GetAllAsync();
+            var nonDeletedGovernorates = result.Where(g => g.IsDeleted == false);
+
+            return nonDeletedGovernorates.Select(g => new ReadGovernoratesDto
+            {
+                Id = g.Id,
+                Name = g.Name,
+
+                Cities = g.Cities.Where(c => c.isDeleted == false).Select(c => new ReadCityDto
+                {
+                    id = c.Id,
+                    Name = c.Name,
+                    Pickup = c.Pickup,
+                    Price = c.Price,
+                    IsDeleted = c.isDeleted
+
+                }).ToList()
+            });
+        }
+
         public async Task<IEnumerable<ShowGovernorateWithCityDto>> GetAllGovernorateWithCityAsync()
         {
             var result =await _governorateRepository.GetAllAsync();

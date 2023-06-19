@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Shipping.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -508,6 +508,11 @@ namespace Shipping.DAL.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "DeliverToVillages",
+                columns: new[] { "Id", "AdditionalCost" },
+                values: new object[] { 1, 20.0 });
+
+            migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
@@ -526,6 +531,11 @@ namespace Shipping.DAL.Migrations
                     { 12, "DeliverToVillage" },
                     { 13, "Weight" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Weights",
+                columns: new[] { "Id", "AdditionalPrice", "DefaultWeight" },
+                values: new object[] { 1, 30.0, 10.0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
