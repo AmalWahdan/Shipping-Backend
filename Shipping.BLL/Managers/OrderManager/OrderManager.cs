@@ -124,7 +124,7 @@ namespace Shipping.BLL.Managers
 
         }
 
-        public async Task<bool> Update(UpdateOrderDto newOrder)
+        public async Task<UpdateOrderResultDto> Update(UpdateOrderDto newOrder)
         {
             double costDeliverToVillage = await Cost_DeliverToVillageAsync(newOrder.DeliverToVillage);
 
@@ -184,11 +184,13 @@ namespace Shipping.BLL.Managers
                     bool isSaved = _orderRepository.SaveChanges();
                     if (isSaved)
                     {
-                        return true;
+                        double shippingTotalCost = costDeliverToVillage + costAddititonalWeight + cityShippingPrice + costShippingType;
+
+                        return new UpdateOrderResultDto(true, costAllProducts, shippingTotalCost, countWeight);
                     }
                 }
             }
-            return false;
+            return new UpdateOrderResultDto(false, null, null, null);
         }
 
         public bool Delete(int orderId)
@@ -287,19 +289,6 @@ namespace Shipping.BLL.Managers
             }
 
             return null;
-        }
-
-        public IEnumerable<ReadOrderDto> GetAllByStatus(OrderStatus orderStatus)
-        {
-            return _orderRepository.GetAllByStatus(orderStatus).Select(s => new ReadOrderDto
-            {
-                Date = s.Date,
-                ClientName = s.ClientName,
-                Governorate = s.Governorate!.Name,
-                City = s.City!.Name,
-                orderStatus = s.orderStatus,
-                Cost = s.ProductTotalCost + s.OrderShippingTotalCost
-            });
         }
 
         private async Task<double> CityShippingPrice(int cityId)
@@ -421,6 +410,24 @@ namespace Shipping.BLL.Managers
             return countOrdres.ToList();
         }
 
+        public List<int> CountOrdersForRepresentativeByStatus(string representativeId)
+        {
+            var listOrderStatus = _orderRepository.CountOrdersForRepresentativeByStatus(representativeId);
+            int[] countOrdres = new int[11];
+
+            var g = listOrderStatus.GroupBy(i => i);
+
+            foreach (var grp in g)
+            {
+                countOrdres[grp.Key] = grp.Count();
+            }
+
+            int[] result = new int[8];
+
+            Array.Copy(countOrdres, 2, result, 0, 8);
+
+            return result.ToList();
+        }
         public IEnumerable<ReadOrderDto> GetOrdersForEmployee(string searchText,int statusId, int pageNumer, int pageSize)
         {
             if (statusId > 10 || statusId < 0)
@@ -429,6 +436,7 @@ namespace Shipping.BLL.Managers
             }
             return _orderRepository.GetOrdersForEmployee(searchText,statusId, pageNumer, pageSize).Select(o => new ReadOrderDto
             {
+                Id=o.Id,
                 ClientName = o.ClientName,
                 Date = o.Date,
                 Governorate = o.Governorate!.Name,
@@ -506,14 +514,14 @@ namespace Shipping.BLL.Managers
             }
         }
 
-        public int GetCountOrdersForRepresentative(string representativeId, string searchText)
+        public int GetCountOrdersForRepresentative(string representativeId, int statusId, string searchText)
         {
-            return _orderRepository.GetCountOrdersForRepresentative(representativeId, searchText);
+            return _orderRepository.GetCountOrdersForRepresentative(representativeId, statusId, searchText);
         }
 
-        public IEnumerable<ReadOrderDto> GetOrdersForRepresentative(string representativeId, int pageNumer, int pageSize, string searchText)
+        public IEnumerable<ReadOrderDto> GetOrdersForRepresentative(string representativeId, int statusId, int pageNumer, int pageSize, string searchText)
         {
-            return _orderRepository.GetOrdersForRepresentative(representativeId, pageNumer, pageSize, searchText).Select(o => new ReadOrderDto
+            return _orderRepository.GetOrdersForRepresentative(representativeId,statusId, pageNumer, pageSize, searchText).Select(o => new ReadOrderDto
             {
                 Id = o.Id,
                 ClientName = o.ClientName,
@@ -575,6 +583,23 @@ namespace Shipping.BLL.Managers
             }
 
             return null;
+        }
+
+        public bool ChangeStatusAndReasonRefusal(int OrderId, OrderStatus status, int? reasonRefusal)
+        {
+            var order = _orderRepository.GetById(OrderId);
+            if (order == null)
+            {
+                return false;
+            }
+            else
+            {
+                order.orderStatus = status;
+                if (reasonRefusal != -1) { order.ReasonsRefusalTypeId = reasonRefusal; }
+                else { order.ReasonsRefusalTypeId = null; }
+                _orderRepository.SaveChanges();
+                return true;
+            }
         }
     }
 }

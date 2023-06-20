@@ -54,16 +54,6 @@ namespace Shipping.DAL.Repositories
                .Where(d => d.isDeleted == false && d.Date > fromDate && d.Date < toDate && d.orderStatus == status)
                .Count();
         }
-
-        public IEnumerable<Order> GetAllByStatus(OrderStatus orderStatus)
-        {
-            return _context.Orders
-                .Where(s => s.orderStatus == orderStatus && s.isDeleted == false)
-                .Include(gover => gover.Governorate)
-                .Include(city => city.City)
-
-                .AsNoTracking();
-        }
         public Order GetById(int orderId)
         {
             try
@@ -119,7 +109,11 @@ namespace Shipping.DAL.Repositories
         }
         public List<int> CountOrdersForMerchantByStatus(string merchantId)
         {
-            return _context.Orders.Where(s => s.isDeleted == false && s.MerchantId == merchantId).Select(s => (int)s.orderStatus).ToList(); throw new NotImplementedException();
+            return _context.Orders.Where(s => s.isDeleted == false && s.MerchantId == merchantId).Select(s => (int)s.orderStatus).ToList();
+        }
+        public List<int> CountOrdersForRepresentativeByStatus(string representativeId)
+        {
+            return _context.Orders.Where(s => s.isDeleted == false && s.RepresentativeId == representativeId).Select(s => (int)s.orderStatus).ToList();
         }
         public bool SaveChanges()
         {
@@ -171,17 +165,17 @@ namespace Shipping.DAL.Repositories
                 .Where(o => o.orderStatus == (OrderStatus)statusId && o.MerchantId == merchantId && o.isDeleted == false && o.ClientName.StartsWith(searchText))
                 .Count();
         }
-        public int GetCountOrdersForRepresentative(string representativeId, string searchText)
+        public int GetCountOrdersForRepresentative(string representativeId, int statusId, string searchText)
         {
             return _context.Orders
-               .Where(o => o.orderStatus == OrderStatus.RepresentitiveDelivered && o.isDeleted == false && o.RepresentativeId == representativeId && o.ClientName.StartsWith(searchText))
+               .Where(o => o.orderStatus == (OrderStatus)statusId && o.isDeleted == false && o.RepresentativeId == representativeId && o.ClientName.StartsWith(searchText))
                .Count();
         }
 
-        public IEnumerable<Order> GetOrdersForRepresentative(string representativeId, int pageNumer, int pageSize, string searchText)
+        public IEnumerable<Order> GetOrdersForRepresentative(string representativeId, int statusId, int pageNumer, int pageSize, string searchText)
         {
             return _context.Orders
-                .Where(o => o.orderStatus == OrderStatus.RepresentitiveDelivered && o.isDeleted == false && o.RepresentativeId == representativeId && o.ClientName.StartsWith(searchText))
+                .Where(o => o.orderStatus == (OrderStatus)statusId && o.isDeleted == false && o.RepresentativeId == representativeId && o.ClientName.StartsWith(searchText))
                 .Skip((pageNumer - 1) * pageSize)
                 .Take(pageSize)
                 .Include(gover => gover.Governorate)

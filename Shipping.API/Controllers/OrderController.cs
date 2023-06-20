@@ -28,13 +28,12 @@ namespace Shipping.API.Controllers
             ModelState.AddModelError("save", "Can't save Order may be some ID'S wrong!");
             return BadRequest(ModelState);
         }
-        
-        
+                
         [HttpPut]
-        public async Task<ActionResult> Update(UpdateOrderDto order)
+        public async Task<ActionResult<UpdateOrderResultDto>> Update(UpdateOrderDto order)
         {
             var result =await _orderManager.Update(order);
-            if (result && ModelState.IsValid)
+            if (result.IsSuccesfull && ModelState.IsValid)
             {
                 return Ok(new { message = "Order was updated successfully." });
             }
@@ -65,21 +64,6 @@ namespace Shipping.API.Controllers
             return BadRequest(new { message = "Item not found" });
         }
 
-        
-        [HttpGet]
-        [Route("CountAll")]
-        public ActionResult<int> CountAll()
-        {
-            return Ok(_orderManager.CountAll());
-        }
-
-        [HttpGet]
-        [Route("GetAllByStatus")]
-        public ActionResult<IEnumerable<ReadOrderDto>> GetAllByStatus(OrderStatus orderStatus)
-        {
-            return Ok(_orderManager.GetAllByStatus(orderStatus));
-        }
-
         //Home Page
         [HttpGet]
         [Route("CountOrdersForEmployeeByStatus")]
@@ -95,7 +79,13 @@ namespace Shipping.API.Controllers
             return Ok(_orderManager.CountOrdersForMerchantByStatus(id));
         }
 
-        
+        [HttpGet]
+        [Route("CountOrdersForRepresentativeByStatus")]
+        public ActionResult CountOrdersForRepresentativeByStatus(string representativeId)
+        {
+            return Ok(_orderManager.CountOrdersForRepresentativeByStatus(representativeId));
+        }
+
         //Paging
         [HttpGet]
         [Route("GetOrdersForEmployee")]
@@ -155,16 +145,16 @@ namespace Shipping.API.Controllers
         //Orders For Representative
         [HttpGet]
         [Route("GetCountOrdersForRepresentative")]
-        public ActionResult<int> GetCountOrdersForRepresentative(string representativeId, string searchText = "")
+        public ActionResult<int> GetCountOrdersForRepresentative(string representativeId,int statusId, string searchText = "")
         {
-            return Ok(_orderManager.GetCountOrdersForRepresentative(representativeId, searchText));
+            return Ok(_orderManager.GetCountOrdersForRepresentative(representativeId,statusId, searchText));
         }
 
         [HttpGet]
         [Route("GetOrdersForRepresentative")]
-        public ActionResult<IEnumerable<ReadOrderDto>> GetOrdersForRepresentative(string representativeId, int pageNubmer, int pageSize, string searchText = "")
+        public ActionResult<IEnumerable<ReadOrderDto>> GetOrdersForRepresentative(string representativeId, int statusId, int pageNubmer, int pageSize, string searchText = "")
         {
-            return Ok(_orderManager.GetOrdersForRepresentative(representativeId, pageNubmer, pageSize, searchText));
+            return Ok(_orderManager.GetOrdersForRepresentative(representativeId,statusId, pageNubmer, pageSize, searchText));
         }
 
         [HttpGet("DropdownListRepresentative")]
@@ -188,6 +178,19 @@ namespace Shipping.API.Controllers
             if (order != null)
             {
                 return Ok(order);
+            }
+            return BadRequest(new { message = "Item not found" });
+        }
+
+        [HttpPut]
+        [Route("ChangeStatusAndReasonRefusal")]
+        public ActionResult ChangeStatusAndReasonRefusal(int orderId, OrderStatus status,int? reasonRefusal)
+        {
+            bool result = _orderManager.ChangeStatusAndReasonRefusal(orderId, status,reasonRefusal);
+            if (result)
+            {
+                return Ok(new { message = "Changed Successfully" });
+
             }
             return BadRequest(new { message = "Item not found" });
         }

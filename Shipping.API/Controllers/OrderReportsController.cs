@@ -19,6 +19,21 @@ namespace Shipping.API.Controllers
 
 
         [HttpGet]
+        [Route("GetAllOrder")]
+        public ActionResult<IEnumerable<ReadOrderReportsDto>> GetAllOrder(int pageNubmer, int pageSize)
+        {
+            return Ok(_orderManager.GetAll(pageNubmer, pageSize));
+        }
+
+        [HttpGet]
+        [Route("CountAll")]
+        public ActionResult<int> CountAll()
+        {
+            return Ok(_orderManager.CountAll());
+        }
+
+
+        [HttpGet]
         [Route("SearchByDateAndStatus")]
         public ActionResult<IEnumerable<ReadOrderReportsDto>> SearchByDateAndStatus(int pageNubmer, int pageSize, DateTime fromDate, DateTime toDate, OrderStatus status)
         {
@@ -31,12 +46,7 @@ namespace Shipping.API.Controllers
             return Ok(_orderManager.CountOrdersByDateAndStatus(fromDate, toDate, status));
         }
 
-        [HttpGet]
-        [Route("GetAllOrder")]
-        public ActionResult<IEnumerable<ReadOrderReportsDto>> GetAllOrder(int pageNubmer, int pageSize)
-        {
-            return Ok(_orderManager.GetAll(pageNubmer, pageSize));
-        }
+       
 
     }
 }
