@@ -24,7 +24,7 @@ namespace Shipping.BLL.Managers
 
 
 
-        public async Task<ShowBranchDto> GetBranchByIdAsync(int id)
+        public async Task<getBranchByIdDto> GetBranchByIdAsync(int id)
         {
 
             Branch branch = await _branchRepository.GetByCriteriaAsync(b=>b.Id == id && b.isDeleted==false);
@@ -34,9 +34,9 @@ namespace Shipping.BLL.Managers
                 return null;
             }
 
-            return new ShowBranchDto
+            return new getBranchByIdDto
             {
-                Id = branch.Id,
+               
                 Name = branch.Name,
                 DateTime = branch.DateTime,
                 isDeleted = branch.isDeleted,
@@ -68,16 +68,13 @@ namespace Shipping.BLL.Managers
         }
 
 
-        public async Task<IEnumerable<ShowBranchDto>> GetAllAsync()
+        public async Task<IEnumerable<UpdateBranchDto>> GetAllAsync()
         {
             var Branches = _branchRepository.GetAllAsync().Result.Where(b=>b.isDeleted==false && b.status==true);
-            return Branches.Select(b => new ShowBranchDto
+            return Branches.Select(b => new UpdateBranchDto
             {
                 Id = b.Id,
-                Name = b.Name,
-                DateTime = b.DateTime,
-                isDeleted = b.isDeleted,
-                status= b.status,
+                Name = b.Name
             }).ToList();
 
            

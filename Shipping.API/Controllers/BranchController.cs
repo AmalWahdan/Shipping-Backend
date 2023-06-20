@@ -20,7 +20,7 @@ namespace Shipping.API.Controllers
 
     
         [HttpGet("{id}")]
-        public async Task<ActionResult<ShowBranchDto>> GetById(int id)
+        public async Task<ActionResult<getBranchByIdDto>> GetById(int id)
         { 
             var branch = await _branchManager.GetBranchByIdAsync(id);
             if (branch == null)

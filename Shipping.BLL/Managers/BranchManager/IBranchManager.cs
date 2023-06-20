@@ -12,9 +12,9 @@ namespace Shipping.BLL.Managers
     public interface IBranchManager
     {
        
-            Task<ShowBranchDto> GetBranchByIdAsync(int id);
+            Task<getBranchByIdDto> GetBranchByIdAsync(int id);
             Task<Pagination<ShowBranchDto>> GetAllBranchesAsync(GSpecParams branchSpecParams);
-            Task<IEnumerable<ShowBranchDto>> GetAllAsync();
+            Task<IEnumerable<UpdateBranchDto>> GetAllAsync();
             Task<int> CreateBranchAsync(AddBranchDto branchDto);
             Task<int> UpdateBranchAsync(UpdateBranchDto branchDto);
             Task<int> DeleteBranchAsync(int id);
