@@ -31,14 +31,14 @@ namespace Shipping.API.Controllers
         {
             return Ok(_orderManager.CountAll());
         }
-
-
+       
         [HttpGet]
         [Route("SearchByDateAndStatus")]
         public ActionResult<IEnumerable<ReadOrderReportsDto>> SearchByDateAndStatus(int pageNubmer, int pageSize, DateTime fromDate, DateTime toDate, OrderStatus status)
         {
             return Ok(_orderManager.SearchByDateAndStatus(pageNubmer, pageSize, fromDate, toDate, status));
         }
+        
         [HttpGet]
         [Route("CountOrdersByDateAndStatus")]
         public ActionResult<int> CountOrdersByDateAndStatus(DateTime fromDate, DateTime toDate, OrderStatus status)

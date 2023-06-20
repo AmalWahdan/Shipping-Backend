@@ -123,7 +123,6 @@ namespace Shipping.BLL.Managers
             return new AddOrderResultDto(false,null,null,null);
 
         }
-
         public async Task<UpdateOrderResultDto> Update(UpdateOrderDto newOrder)
         {
             double costDeliverToVillage = await Cost_DeliverToVillageAsync(newOrder.DeliverToVillage);
@@ -192,7 +191,6 @@ namespace Shipping.BLL.Managers
             }
             return new UpdateOrderResultDto(false, null, null, null);
         }
-
         public bool Delete(int orderId)
         {
             var order = _orderRepository.GetById(orderId);
@@ -213,47 +211,6 @@ namespace Shipping.BLL.Managers
 
             }
             return false;
-        }
-
-        public IEnumerable<ReadOrderReportsDto> GetAll(int pageNumer, int pageSize)
-        {
-            return _orderRepository.GetAll(pageNumer,pageSize).Select(s => new ReadOrderReportsDto
-            {
-                Merchant = s.Merchant!.Name,
-                orderStatus = s.orderStatus,
-                FirstPhoneNumber = s.FirstPhoneNumber,
-                OrderShippingTotalCost = s.OrderShippingTotalCost,
-                ProductTotalCost = s.ProductTotalCost,
-                Date = s.Date,
-                ClientName = s.ClientName,
-                Governorate = s.Governorate!.Name,
-                City = s.City!.Name,
-            });
-        }
-
-        public int CountAll()
-        {
-            return _orderRepository.CountAll();
-        }
-        public IEnumerable<ReadOrderReportsDto> SearchByDateAndStatus(int pageNumer, int pageSize, DateTime fromDate, DateTime toDate, OrderStatus status)
-        {
-            return _orderRepository.SearchByDateAndStatus(pageNumer, pageSize,fromDate,toDate,status).Select(s => new ReadOrderReportsDto
-            {
-                Merchant = s.Merchant!.Name,
-                orderStatus = s.orderStatus,
-                FirstPhoneNumber = s.FirstPhoneNumber,
-                OrderShippingTotalCost = s.OrderShippingTotalCost,
-                ProductTotalCost = s.ProductTotalCost,
-                Date = s.Date,
-                ClientName = s.ClientName,
-                Governorate = s.Governorate!.Name,
-                City = s.City!.Name,
-            });
-        }
-
-        public int CountOrdersByDateAndStatus(DateTime fromDate, DateTime toDate, OrderStatus status)
-        {
-            return _orderRepository.CountOrdersByDateAndStatus(fromDate,toDate,status);
         }
         public UpdateOrderDto GetById(int orderId)
         {
@@ -290,7 +247,82 @@ namespace Shipping.BLL.Managers
 
             return null;
         }
+        public ReadAllOrderDataDto GetAllDataById(int orderId)
+        {
+            var order = _orderRepository.GetById(orderId);
+            
+            if (order != null)
+            {
+                ReadAllOrderDataDto result = new ReadAllOrderDataDto()
+                {
+                    PaymentType = order.PaymentType,
+                    Email = order.Email,
+                    Branch = order.Branch!.Name,
+                    City = order.City!.Name,
+                    DeliverToVillage = order.DeliverToVillage ?? false,
+                    FirstPhoneNumber = order.FirstPhoneNumber,
+                    SecondPhoneNumber = order.SecondPhoneNumber!,
+                    Governorate = order.Governorate!.Name,
+                    Notes = order.Notes,
+                    ShippingType = order.ShippingType!.Name,
+                    orderType = order.orderType,
+                    Street = order.Street,
+                    ClientName = order.ClientName,
+                    Products = order.Products.Select(prod => new ProductDto
+                    {
+                        Name = prod.Name,
+                        Quantity = prod.Quantity,
+                        Price = prod.Price,
+                        Weight = prod.Weight,
+                    }).ToList()
+                };
+                return result;
+            }
 
+            return null;
+        }
+
+        //order reports
+        public IEnumerable<ReadOrderReportsDto> GetAll(int pageNumer, int pageSize)
+        {
+            return _orderRepository.GetAll(pageNumer,pageSize).Select(s => new ReadOrderReportsDto
+            {
+                Merchant = s.Merchant!.Name,
+                orderStatus = s.orderStatus,
+                FirstPhoneNumber = s.FirstPhoneNumber,
+                OrderShippingTotalCost = s.OrderShippingTotalCost,
+                ProductTotalCost = s.ProductTotalCost,
+                Date = s.Date,
+                ClientName = s.ClientName,
+                Governorate = s.Governorate!.Name,
+                City = s.City!.Name,
+            });
+        }
+        public int CountAll()
+        {
+            return _orderRepository.CountAll();
+        }
+        public IEnumerable<ReadOrderReportsDto> SearchByDateAndStatus(int pageNumer, int pageSize, DateTime fromDate, DateTime toDate, OrderStatus status)
+        {
+            return _orderRepository.SearchByDateAndStatus(pageNumer, pageSize,fromDate,toDate,status).Select(s => new ReadOrderReportsDto
+            {
+                Merchant = s.Merchant!.Name,
+                orderStatus = s.orderStatus,
+                FirstPhoneNumber = s.FirstPhoneNumber,
+                OrderShippingTotalCost = s.OrderShippingTotalCost,
+                ProductTotalCost = s.ProductTotalCost,
+                Date = s.Date,
+                ClientName = s.ClientName,
+                Governorate = s.Governorate!.Name,
+                City = s.City!.Name,
+            });
+        }
+        public int CountOrdersByDateAndStatus(DateTime fromDate, DateTime toDate, OrderStatus status)
+        {
+            return _orderRepository.CountOrdersByDateAndStatus(fromDate,toDate,status);
+        }
+
+        
         private async Task<double> CityShippingPrice(int cityId)
         {
             var result = await _cityRepository.GetByIdAsync(cityId);
@@ -366,7 +398,7 @@ namespace Shipping.BLL.Managers
             return price;
         }
 
-        public async Task<decimal> GetSpecialPricesWithMerchantandCityId(string merchantId, int cityId)
+        private async Task<decimal> GetSpecialPricesWithMerchantandCityId(string merchantId, int cityId)
         {
             decimal totalPrice = 0;
             var result = await _specialPriceRepository.GetAllAsync();
@@ -382,6 +414,7 @@ namespace Shipping.BLL.Managers
 
         }
 
+        //Employee
         public List<int> CountOrdersForEmployeeByStatus()
         {
             var listOrderStatus = _orderRepository.CountOrdersForEmployeeByStatus();
@@ -395,38 +428,13 @@ namespace Shipping.BLL.Managers
             }
             return countOrdres.ToList();
         }
-
-        public List<int> CountOrdersForMerchantByStatus(string merchantId)
+        public int GetCountOrdersForEmployee(int statusId, string searchText)
         {
-            var listOrderStatus = _orderRepository.CountOrdersForMerchantByStatus(merchantId);
-            int[] countOrdres = new int[11];//size of enum
-
-            var g = listOrderStatus.GroupBy(i => i);
-
-            foreach (var grp in g)
+            if (statusId > 10 || statusId < 0)
             {
-                countOrdres[grp.Key] = grp.Count();
+                return 0;
             }
-            return countOrdres.ToList();
-        }
-
-        public List<int> CountOrdersForRepresentativeByStatus(string representativeId)
-        {
-            var listOrderStatus = _orderRepository.CountOrdersForRepresentativeByStatus(representativeId);
-            int[] countOrdres = new int[11];
-
-            var g = listOrderStatus.GroupBy(i => i);
-
-            foreach (var grp in g)
-            {
-                countOrdres[grp.Key] = grp.Count();
-            }
-
-            int[] result = new int[8];
-
-            Array.Copy(countOrdres, 2, result, 0, 8);
-
-            return result.ToList();
+            return _orderRepository.GetCountOrdersForEmployee(statusId,searchText);
         }
         public IEnumerable<ReadOrderDto> GetOrdersForEmployee(string searchText,int statusId, int pageNumer, int pageSize)
         {
@@ -445,7 +453,60 @@ namespace Shipping.BLL.Managers
 
             });
         }
+        public bool SelectRepresentative(int OrderId, string representativeId)
+        {
+            var order = _orderRepository.GetById(OrderId);
+            if (order == null)
+            {
+                return false;
+            }
+            else
+            {
+                order.RepresentativeId = representativeId;
+                order.orderStatus = OrderStatus.RepresentitiveDelivered;
+                _orderRepository.SaveChanges();
+                return true;
+            }
+        }
+        public async Task<List<DropdownListRepresentativeDto>> DropdownListRepresentativeAsync(int orderId)
+        {
+            var governorateId = _orderRepository.GetById(orderId)?.GovernorateId;
 
+            var representativeGovernate = await _representativeGovernateRepository.GetAllAsync();
+            var governorates = await _governorateRepository.GetAllAsync();
+            List<DropdownListRepresentativeDto> result = (from a in _userManager.Users
+                                                          join b in representativeGovernate  on a.Id equals b.RepresentativeId
+                                                          join c in governorates on b.GovernorateId equals governorateId
+                                                          select new DropdownListRepresentativeDto { Name = a.Name, Id = a.Id }).Distinct().ToList();
+
+
+            return result;
+
+
+        }
+        
+        //Merchant
+        public List<int> CountOrdersForMerchantByStatus(string merchantId)
+        {
+            var listOrderStatus = _orderRepository.CountOrdersForMerchantByStatus(merchantId);
+            int[] countOrdres = new int[11];//size of enum
+
+            var g = listOrderStatus.GroupBy(i => i);
+
+            foreach (var grp in g)
+            {
+                countOrdres[grp.Key] = grp.Count();
+            }
+            return countOrdres.ToList();
+        }
+        public int GetCountOrdersForMerchant(string merchantId, int statusId, string searchText)
+        {
+            if (statusId > 10 || statusId < 0)
+            {
+                return 0;
+            }
+            return _orderRepository.GetCountOrdersForMerchant(merchantId, statusId,searchText);
+        }
         public IEnumerable<ReadOrderDto> GetOrdersForMerchant(string searchText, string merchantId, int statusId, int pageNumer, int pageSize)
         {
             if (statusId > 10 || statusId < 0)
@@ -464,25 +525,7 @@ namespace Shipping.BLL.Managers
             });
         }
 
-        public int GetCountOrdersForEmployee(int statusId, string searchText)
-        {
-            if (statusId > 10 || statusId < 0)
-            {
-                return 0;
-            }
-            return _orderRepository.GetCountOrdersForEmployee(statusId,searchText);
-        }
-
-        public int GetCountOrdersForMerchant(string merchantId, int statusId, string searchText)
-        {
-            if (statusId > 10 || statusId < 0)
-            {
-                return 0;
-            }
-            return _orderRepository.GetCountOrdersForMerchant(merchantId, statusId,searchText);
-        }
-
-
+        //Employee and Merchant
         public bool ChangeStatus(int OrderId, OrderStatus status)
         {
             var order = _orderRepository.GetById(OrderId);
@@ -498,27 +541,30 @@ namespace Shipping.BLL.Managers
             }
         }
 
-        public bool SelectRepresentative(int OrderId, string representativeId)
+        
+        //Representative
+        public List<int> CountOrdersForRepresentativeByStatus(string representativeId)
         {
-            var order = _orderRepository.GetById(OrderId);
-            if (order == null)
-            {
-                return false;
-            }
-            else
-            {
-                order.RepresentativeId = representativeId;
-                order.orderStatus = OrderStatus.RepresentitiveDelivered;
-                _orderRepository.SaveChanges();
-                return true;
-            }
-        }
+            var listOrderStatus = _orderRepository.CountOrdersForRepresentativeByStatus(representativeId);
+            int[] countOrdres = new int[11];
 
+            var g = listOrderStatus.GroupBy(i => i);
+
+            foreach (var grp in g)
+            {
+                countOrdres[grp.Key] = grp.Count();
+            }
+
+            int[] result = new int[8];
+
+            Array.Copy(countOrdres, 2, result, 0, 8);
+
+            return result.ToList();
+        }
         public int GetCountOrdersForRepresentative(string representativeId, int statusId, string searchText)
         {
             return _orderRepository.GetCountOrdersForRepresentative(representativeId, statusId, searchText);
         }
-
         public IEnumerable<ReadOrderDto> GetOrdersForRepresentative(string representativeId, int statusId, int pageNumer, int pageSize, string searchText)
         {
             return _orderRepository.GetOrdersForRepresentative(representativeId,statusId, pageNumer, pageSize, searchText).Select(o => new ReadOrderDto
@@ -532,59 +578,6 @@ namespace Shipping.BLL.Managers
 
             });
         }
-
-        public async Task<List<DropdownListRepresentativeDto>> DropdownListRepresentativeAsync(int orderId)
-        {
-            var governorateId = _orderRepository.GetById(orderId)?.GovernorateId;
-
-            var representativeGovernate = await _representativeGovernateRepository.GetAllAsync();
-            var governorates = await _governorateRepository.GetAllAsync();
-            List<DropdownListRepresentativeDto> result = (from a in _userManager.Users
-                                                          join b in representativeGovernate  on a.Id equals b.RepresentativeId
-                                                          join c in governorates on b.GovernorateId equals governorateId
-                                                          select new DropdownListRepresentativeDto { Name = a.Name, Id = a.Id }).Distinct().ToList();
-
-
-            return result;
-
-
-        }
-
-        public ReadAllOrderDataDto GetAllDataById(int orderId)
-        {
-            var order = _orderRepository.GetById(orderId);
-            
-            if (order != null)
-            {
-                ReadAllOrderDataDto result = new ReadAllOrderDataDto()
-                {
-                    PaymentType = order.PaymentType,
-                    Email = order.Email,
-                    Branch = order.Branch!.Name,
-                    City = order.City!.Name,
-                    DeliverToVillage = order.DeliverToVillage ?? false,
-                    FirstPhoneNumber = order.FirstPhoneNumber,
-                    SecondPhoneNumber = order.SecondPhoneNumber!,
-                    Governorate = order.Governorate!.Name,
-                    Notes = order.Notes,
-                    ShippingType = order.ShippingType!.Name,
-                    orderType = order.orderType,
-                    Street = order.Street,
-                    ClientName = order.ClientName,
-                    Products = order.Products.Select(prod => new ProductDto
-                    {
-                        Name = prod.Name,
-                        Quantity = prod.Quantity,
-                        Price = prod.Price,
-                        Weight = prod.Weight,
-                    }).ToList()
-                };
-                return result;
-            }
-
-            return null;
-        }
-
         public bool ChangeStatusAndReasonRefusal(int OrderId, OrderStatus status, int? reasonRefusal)
         {
             var order = _orderRepository.GetById(OrderId);
@@ -601,5 +594,7 @@ namespace Shipping.BLL.Managers
                 return true;
             }
         }
+
+
     }
 }
