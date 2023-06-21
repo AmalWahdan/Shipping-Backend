@@ -162,5 +162,6 @@ namespace Shipping.BLL.Dtos
     }
 
     public record AddOrderResultDto(bool IsSuccesfull, double? ProductTotalCost, double? OrderShippingTotalCost,double? totalWeight);
+    public record UpdateOrderResultDto(bool IsSuccesfull, double? ProductTotalCost, double? OrderShippingTotalCost,double? totalWeight);
 
 }
