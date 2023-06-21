@@ -159,8 +159,6 @@ namespace Shipping.DAL.Data
 				.WithOne(gp => gp.Permission)
 				.HasForeignKey(gp => gp.PermissionId);
 
-			modelBuilder.Entity<GroupPermission>()
-				.HasKey(gp => new { gp.GroupId, gp.PermissionId });
 
             modelBuilder.Entity<Group>()
               .HasMany(g => g.Employees)

@@ -8,7 +8,7 @@ namespace Shipping.DAL.Data.Models
 {
 	public class GroupPermission
 	{
-		
+		public int id { get; set; }
 		public string Action { get; set; } 
 		public int GroupId { get; set; }
 
