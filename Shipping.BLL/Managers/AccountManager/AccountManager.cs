@@ -30,8 +30,8 @@ namespace Shipping.BLL.Managers
         public async Task<string> LoginUser(LoginDtos loginDTO)
         {
             var user = await _userManager.FindByEmailAsync(loginDTO.Email);
-
-            if (user == null)
+        
+            if (user == null || user.IsDeleted == true)
             {
                 throw new Exception("User not found.");
             }
@@ -46,6 +46,7 @@ namespace Shipping.BLL.Managers
             return await GenerateToken(user);
 
         }
+
         public async Task LogoutUser()
         {
             await _signInManager.SignOutAsync();

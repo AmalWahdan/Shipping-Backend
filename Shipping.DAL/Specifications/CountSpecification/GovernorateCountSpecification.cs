@@ -12,7 +12,8 @@ namespace Shipping.DAL.Specifications
     public class GovernorateCountSpecification : BaseSpecification<Governorate>
     {
         public GovernorateCountSpecification(GSpecParams SpecParams)
-            :base(x=>string.IsNullOrEmpty(SpecParams.Search) || x.Name.ToLower().Contains(SpecParams.Search))
+            :base(x=>(string.IsNullOrEmpty(SpecParams.Search) || x.Name.ToLower().Contains(SpecParams.Search))
+            && (x.IsDeleted== false))
             {
             
         }

@@ -16,7 +16,7 @@ namespace Shipping.BLL.Managers
         Task<IEnumerable<GroupForDropDown>> GetAllAsync();
         Task<int> DeleteGroupAsync(int id);
         Task<GroupWithPermissionsDto> GetGroupByIdWithPermissionsAsync(int id);
-        Task<int> UpdateGroupAsync(int id, UpdateGroupDto groupDto);
+        Task<int> UpdateGroupAsync( UpdateGroupDto groupDto);
         Task<Pagination<GroupDto>> GetAllAsync(GSpecParams groupSpecParams);
 
     }

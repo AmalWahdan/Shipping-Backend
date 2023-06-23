@@ -56,7 +56,7 @@ namespace Shipping.API.Controllers
         {
             if (id != groupDto.Id)
                 return BadRequest();
-            var result = await _groupManager.UpdateGroupAsync(id, groupDto);
+            var result = await _groupManager.UpdateGroupAsync( groupDto);
             if (result == 0)
                 return NotFound();
             else if (result == -1)

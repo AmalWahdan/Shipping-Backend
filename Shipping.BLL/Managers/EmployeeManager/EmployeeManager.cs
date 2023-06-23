@@ -57,6 +57,20 @@ namespace Shipping.BLL.Managers
           
             return await _employeeRepo.UpdateAsync(employee);
         }
+        public async Task<int> UpdateEmployeePassword(UpdatePasswordDtos updatePassDto)
+        {
+            
+            var employee = await _employeeRepo.GetByCriteriaAsync(e => e.Id == updatePassDto.Id && !e.IsDeleted);
+            if (employee == null)
+            {
+                return 0;
+            }
+            employee.Email = updatePassDto.Email;
+            employee.PasswordHash = _userManager.PasswordHasher.HashPassword(employee, updatePassDto.Password);
+        
+            return await _employeeRepo.UpdateAsync(employee);
+        }
+
         public async Task<int> RegisterEmployee(EmployeeRegisterDto registrationDTO)
         {
             ApplicationUser employee = new Employee

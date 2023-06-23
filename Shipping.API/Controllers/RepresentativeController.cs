@@ -67,6 +67,20 @@ namespace Shipping.API.Controllers
             return StatusCode(500);
         }
 
+        [HttpPut("pass/id")]
+        public async Task<IActionResult> UpdateRepresentativePass(string id, UpdatePasswordDtos updateDto)
+        {
+            if (id != updateDto.Id)
+                return BadRequest();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var result = await _representativeManager.UpdateRepresentativePassword(updateDto);
+            if (result > 0)
+                return Ok();
+            return StatusCode(500);
+        }
+
+
         [HttpDelete]
         public async Task<IActionResult> DeleteRepresentative(string id)
         {

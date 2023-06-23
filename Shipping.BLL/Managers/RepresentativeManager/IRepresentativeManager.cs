@@ -11,6 +11,7 @@ namespace Shipping.BLL.Managers
 {
     public interface IRepresentativeManager
     {
+        Task<int> UpdateRepresentativePassword(UpdatePasswordDtos updatePassDto);
         Task<int> UpdateRepresentative(RepresentativeUpdateDto updateDto);
         Task<getRepresentativeForUpdateDto> GetRepresentativeById(string RepresentativeId);
         Task<Pagination<GetAllRepresentativesDto>> GetAllRepresentativesAsync(GSpecParams representativeSpecParams);
