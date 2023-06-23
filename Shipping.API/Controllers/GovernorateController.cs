@@ -100,7 +100,7 @@ namespace Shipping.API.Controllers
 
             }
 
-            return Ok(new { Message = "Group Deleted Successfully" });
+            return Ok(new { Message = "Government Deleted Successfully" });
 
         }
 
