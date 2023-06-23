@@ -70,7 +70,33 @@ namespace Shipping.API.Controllers
 
 
         }
-      
+
+        [HttpPut("pass/id")]
+        public async Task<IActionResult> UpdateEmployeePass(string id, UpdatePasswordDtos updateDto)
+        {
+
+            if (id != updateDto.Id)
+                return BadRequest();
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+
+            var result = await _employeeManager.UpdateEmployeePassword(updateDto);
+            if (result > 0)
+            {
+                return Ok();
+            }
+
+            return StatusCode(500);
+
+        }
+
+
+
+
 
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetEmployeeById(string Id)

@@ -28,6 +28,20 @@ namespace Shipping.BLL.Managers
 
         }
 
+        public async Task<int> UpdateRepresentativePassword(UpdatePasswordDtos updatePassDto)
+        {
+
+            var representative = await _representativeRepo.GetByCriteriaAsync(e => e.Id == updatePassDto.Id && !e.IsDeleted);
+            if (representative == null)
+            {
+                return 0;
+            }
+            representative.Email = updatePassDto.Email;
+            representative.PasswordHash = _userManager.PasswordHasher.HashPassword(representative, updatePassDto.Password);
+
+            return await _representativeRepo.UpdateAsync(representative);
+        }
+
         public async Task<int> UpdateRepresentative(RepresentativeUpdateDto updateDto)
         {
             var representative = await _representativeRepo.GetByCriteriaAsync(r => r.Id == updateDto.Id && !r.IsDeleted);

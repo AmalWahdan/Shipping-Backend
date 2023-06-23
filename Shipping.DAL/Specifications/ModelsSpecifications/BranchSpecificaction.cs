@@ -19,7 +19,7 @@ namespace Shipping.DAL.Specifications
         
         {
             
-            AddOrderBy(x => x.Name);
+            AddOrderBy(x => x.DateTime);
             ApplyPaging(SpecParams.PageSize * (SpecParams.PageIndex -1), SpecParams.PageSize);
 
             if (!string.IsNullOrEmpty(SpecParams.Sort))
@@ -27,9 +27,9 @@ namespace Shipping.DAL.Specifications
                 switch (SpecParams.Sort)
                 {
                     case "Desc":
-                        AddOrderByDescending(p => p.Name); break;
+                        AddOrderByDescending(p => p.DateTime); break;
                     default:
-                        AddOrderBy(p => p.Name); break;
+                        AddOrderBy(p => p.DateTime); break;
                 }
             }
         }

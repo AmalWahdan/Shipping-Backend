@@ -87,9 +87,9 @@ namespace Shipping.BLL.Managers
 
         }
 
-        public async Task<int> UpdateGroupAsync(int id,UpdateGroupDto groupDto)
+        public async Task<int> UpdateGroupAsync(UpdateGroupDto groupDto)
         {
-            var group = await _groupRepo.GetByCriteriaAsync(g => g.Id == id && !g.IsDeleted);
+            var group = await _groupRepo.GetByCriteriaAsync(g => g.Id == groupDto.Id && !g.IsDeleted);
             if (group == null)
                 return 0;
 
@@ -97,7 +97,7 @@ namespace Shipping.BLL.Managers
             await _groupPermissionRepo.RemoveRangeAsync(existingGroupPermissions);
             await _groupPermissionRepo.AddRangeAsync(groupDto.groupPermissions.Select(gp => new GroupPermission
             {
-                GroupId = id,
+                GroupId = groupDto.Id,
                 PermissionId = gp.PermissionId,
                 Action = gp.Action
 

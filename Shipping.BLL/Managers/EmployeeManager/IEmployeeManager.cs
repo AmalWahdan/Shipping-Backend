@@ -14,6 +14,7 @@ namespace Shipping.BLL.Managers
    
             Task<int> DeleteEmployee(string userId);
             Task<int> UpdateEmployee(EmployeeUpdateDto updateDto);
+        Task<int> UpdateEmployeePassword(UpdatePasswordDtos updatePassDto);
             Task<int> RegisterEmployee(EmployeeRegisterDto registrationDTO);
             Task<getEmployeeForUpdateDtos> GetEmployeeById(string employeeId);
             Task<Pagination<GetAllEmployeesDto>> GetAllEmployeesAsync(GSpecParams employeeSpecParams);

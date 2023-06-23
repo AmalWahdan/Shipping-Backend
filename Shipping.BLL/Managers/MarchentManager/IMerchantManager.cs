@@ -12,6 +12,7 @@ namespace Shipping.BLL.Managers
     public interface IMerchantManager
     {
         Task<int> RegisterMerchant(MerchantRegisterDto registrationDTO);
+        Task<int> UpdateMerchantPassword(UpdatePasswordDtos updatePassDto);
         Task<int> UpdateMerchant(MerchantUpdateDto updateDto);
         Task<int> DeleteMerchant(string userId);
         Task<getMerchantForUpdateDto> GetMerchantByIdWithSpecialPrices(string merchantId);

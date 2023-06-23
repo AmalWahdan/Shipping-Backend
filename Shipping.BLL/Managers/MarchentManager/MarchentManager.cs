@@ -85,6 +85,23 @@ namespace Shipping.BLL.Managers
             return 1;
         }
 
+
+        public async Task<int> UpdateMerchantPassword(UpdatePasswordDtos updatePassDto)
+        {
+
+            var merchant = await _merchantRepo.GetByCriteriaAsync(e => e.Id == updatePassDto.Id && !e.IsDeleted);
+            if (merchant == null)
+            {
+                return 0;
+            }
+            merchant.Email = updatePassDto.Email;
+            merchant.PasswordHash = _userManager.PasswordHasher.HashPassword(merchant, updatePassDto.Password);
+
+            return await _merchantRepo.UpdateAsync(merchant);
+        }
+
+
+
         public async Task<int> UpdateMerchant(MerchantUpdateDto updateDto)
         {
             var merchant = await _merchantRepo.GetByCriteriaAsync(m => m.Id == updateDto.Id && !m.IsDeleted );
