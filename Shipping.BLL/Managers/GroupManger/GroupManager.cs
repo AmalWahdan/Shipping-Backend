@@ -93,7 +93,9 @@ namespace Shipping.BLL.Managers
             if (group == null)
                 return 0;
 
+            group.Name = groupDto.Name;
             List<GroupPermission> existingGroupPermissions = await _groupPermissionRepo.GetGroupPermissionsByGroupId(group.Id);
+        
             await _groupPermissionRepo.RemoveRangeAsync(existingGroupPermissions);
             await _groupPermissionRepo.AddRangeAsync(groupDto.groupPermissions.Select(gp => new GroupPermission
             {
