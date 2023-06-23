@@ -126,7 +126,6 @@ namespace Shipping.BLL.Managers
             return new Pagination<GetAllRepresentativesDto>(representativeSpecParams.PageIndex, representativeSpecParams.PageSize, totalItems, data);
 
         }
-
         public async Task<int> RegisterRepresentative(RepresentativeRegisterDto registrationDTO)
         {
 
@@ -165,6 +164,7 @@ namespace Shipping.BLL.Managers
             {
                 new Claim(ClaimTypes.NameIdentifier, Representative.Id),
                 new Claim(ClaimTypes.Email, Representative.Email),
+                 new Claim(ClaimTypes.Name, Representative.Name),
                 new Claim(ClaimTypes.Role,"Representative")
 
             };

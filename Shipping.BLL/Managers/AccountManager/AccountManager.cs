@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Shipping.BLL.Dtos;
 using Shipping.DAL.Data.Models;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace Shipping.BLL.Managers
@@ -26,7 +27,6 @@ namespace Shipping.BLL.Managers
             _configuration = configuration;
 
         }
-
         public async Task<string> LoginUser(LoginDtos loginDTO)
         {
             var user = await _userManager.FindByEmailAsync(loginDTO.Email);
@@ -58,6 +58,7 @@ namespace Shipping.BLL.Managers
             var key = Encoding.ASCII.GetBytes(_configuration.GetSection("SecretKey").Value ?? string.Empty);
             var Expires = DateTime.Now.AddDays(1);
             var SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);
+           
             var claimsList = await _userManager.GetClaimsAsync(user);
             var token = new JwtSecurityToken(
                 claims: claimsList,
@@ -66,8 +67,13 @@ namespace Shipping.BLL.Managers
 
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            return tokenHandler.WriteToken(token);
+            var tokenString = tokenHandler.WriteToken(token);
+            return tokenString;
         }
+
+
+
+
 
     }
 }

@@ -94,6 +94,7 @@ namespace Shipping.BLL.Managers
             {
                 new Claim(ClaimTypes.NameIdentifier, employee.Id),
                 new Claim(ClaimTypes.Email, employee.Email),
+                new Claim(ClaimTypes.Name, employee.Name),
                 new Claim(ClaimTypes.Role,registrationDTO.GroupId.ToString())
             };
             await _userManager.AddClaimsAsync(employee, claims);

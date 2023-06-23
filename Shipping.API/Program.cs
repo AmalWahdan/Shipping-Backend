@@ -111,8 +111,10 @@ namespace Shipping.API
                 options.AddPolicy("MerchantOnly", policy => policy
                     .RequireClaim(ClaimTypes.Role, "Trader")
                     .RequireClaim(ClaimTypes.NameIdentifier));
-               // [Authorize(Policy = "RepresentativeOnly")]
-                options.AddPolicy("RepresentativeOnly", policy => policy
+                // [Authorize(Policy = "RepresentativeOnly")]
+                // [Authorize(Policy = "MerchantOnly")]
+                //[TypeFilter(typeof(ValidatePermissionAttribute))]
+               options.AddPolicy("RepresentativeOnly", policy => policy
                     .RequireClaim(ClaimTypes.Role, "Representative")
                     .RequireClaim(ClaimTypes.NameIdentifier));
             });

@@ -76,8 +76,9 @@ namespace Shipping.BLL.Managers
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, Merchant.Id),
+                new Claim(ClaimTypes.NameIdentifier, Merchant.Id),  
                 new Claim(ClaimTypes.Email, Merchant.Email),
+                 new Claim(ClaimTypes.Name, Merchant.Name),
                 new Claim(ClaimTypes.Role,  "Merchant")
 
             };
