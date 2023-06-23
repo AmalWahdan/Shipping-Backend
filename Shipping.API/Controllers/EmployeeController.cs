@@ -71,7 +71,7 @@ namespace Shipping.API.Controllers
 
         }
 
-        [HttpPut("pass/id")]
+        [HttpPut("pass")]
         public async Task<IActionResult> UpdateEmployeePass(string id, UpdatePasswordDtos updateDto)
         {
 

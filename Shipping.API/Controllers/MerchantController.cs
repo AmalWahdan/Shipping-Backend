@@ -56,7 +56,7 @@ namespace Shipping.API.Controllers
             return StatusCode(500);
         }
 
-        [HttpPut("pass/id")]
+        [HttpPut("pass")]
         public async Task<IActionResult> UpdateMerchantPass(string id, UpdatePasswordDtos updateDto)
         {
 
