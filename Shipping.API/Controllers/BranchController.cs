@@ -98,7 +98,7 @@ namespace Shipping.API.Controllers
 
             }
 
-            return Ok();
+            return Ok(new { Message = "Branch Deleted Successfully" });
         }
 
         [HttpPut("{id}")]
