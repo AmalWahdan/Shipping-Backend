@@ -35,7 +35,7 @@ namespace Shipping.API.Controllers
             var result =await _orderManager.Update(order);
             if (result.IsSuccesfull && ModelState.IsValid)
             {
-                return Ok(new { message = "Order was updated successfully." });
+                return Ok(new { message = "Order was updated successfully.", result });
             }
             ModelState.AddModelError("save", "Can't save Order may be some ID'S wrong!");
             return BadRequest(ModelState);

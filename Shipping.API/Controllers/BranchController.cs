@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Shipping.API.Filters;
 using Shipping.BLL.Dtos;
 using Shipping.BLL.Managers;
 using Shipping.DAL.Params;
@@ -17,9 +18,8 @@ namespace Shipping.API.Controllers
             _branchManager = branchManager;
         }
 
-
-    
         [HttpGet("{id}")]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<ActionResult<getBranchByIdDto>> GetById(int id)
         { 
             var branch = await _branchManager.GetBranchByIdAsync(id);
@@ -32,6 +32,7 @@ namespace Shipping.API.Controllers
 
    
         [HttpGet]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<ActionResult<IEnumerable<ShowBranchDto>>> GetAll([FromQuery] GSpecParams branchSpecParams)
         {
             var branches = await _branchManager.GetAllBranchesAsync(branchSpecParams);
@@ -48,6 +49,7 @@ namespace Shipping.API.Controllers
 
         
         [HttpPost]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> Create(AddBranchDto branchDto)
         {
             if (!ModelState.IsValid)
@@ -65,6 +67,7 @@ namespace Shipping.API.Controllers
 
        
         [HttpPut]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> Update(int id, UpdateBranchDto branchDto)
         {
             if (branchDto.Id != id)
@@ -85,6 +88,7 @@ namespace Shipping.API.Controllers
             return StatusCode(500);
         }
         [HttpDelete]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _branchManager.DeleteBranchAsync(id);
@@ -102,6 +106,7 @@ namespace Shipping.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> ChangeStatus(int id)
         {
             var result = await _branchManager.ChangeStatusBranchAsync(id);
