@@ -71,9 +71,6 @@ namespace Shipping.API.Controllers
         }
 
 
-
-       
-
         [HttpGet]
         [Route("GetAllForDropDown")]
         [Authorize(Policy = "RepresentativeOnly")]

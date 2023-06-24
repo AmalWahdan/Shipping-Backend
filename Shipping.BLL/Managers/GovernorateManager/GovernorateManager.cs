@@ -18,8 +18,7 @@ namespace Shipping.BLL.Managers
             _governorateRepository = governorateRepository;
         }
 
-       
-
+      
         public async Task<IEnumerable<ShowGovernorateWithCityDto>> GetAllGovernorateWithCityAsync()
         {
             var result =await _governorateRepository.GetAllAsync();

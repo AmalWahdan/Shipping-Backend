@@ -18,6 +18,7 @@ namespace Shipping.API.Controllers
             _representativeManager = representativeManager;
         }
 
+
         [HttpPost]
         [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> RegisterRepresentative([FromBody] RepresentativeRegisterDto registrationDTO)
@@ -38,9 +39,7 @@ namespace Shipping.API.Controllers
             
         }
 
-       
-
-
+      
         [HttpGet]
         [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> GetAllRepresentatives([FromQuery] GSpecParams representativeSpecParams)

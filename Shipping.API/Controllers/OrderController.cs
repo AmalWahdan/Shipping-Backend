@@ -19,12 +19,6 @@ namespace Shipping.API.Controllers
             this._orderManager = orderManager;
         }
 
-
-
-       
-
-
-
         [HttpPost]
         [Authorize(Policy = "MerchantOnly")]
         public async Task<ActionResult<AddOrderResultDto>> Add(AddOrderDto order)

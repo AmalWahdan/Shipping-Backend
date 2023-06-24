@@ -19,10 +19,6 @@ namespace Shipping.API.Controllers
         }
 
 
-        // [Authorize(Policy = "RepresentativeOnly")]
-        // [Authorize(Policy = "MerchantOnly")]
-        
-
       
 
   

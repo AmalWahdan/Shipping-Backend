@@ -38,9 +38,6 @@ namespace Shipping.API.Controllers
 
         }
 
-
-     
-
         [HttpPut("{id}")]
         [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> UpdateGroup(int id, [FromBody] UpdateGroupDto groupDto)
