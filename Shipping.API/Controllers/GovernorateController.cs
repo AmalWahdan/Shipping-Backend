@@ -18,32 +18,8 @@ namespace Shipping.API.Controllers
             _governorateManager = governorateManager;
         }
 
-        [TypeFilter(typeof(GpAttribute))]
 
-
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ShowGovernorateDto>>> GetAll()
-        {
-            var governorates = await _governorateManager.GetAllGovernorateAsync();
-            return Ok(governorates);
-        }
-
-
-        [HttpGet("allWithCity")]
-        public async Task<ActionResult<IEnumerable<UpdateGovernorateDto>>> GetAllWithCity()
-        {
-            var governorates = await _governorateManager.GetAllGovernorateWithCityAsync();
-            return Ok(governorates);
-        }
-
-        [HttpGet("allCitiesWithGovernorate")]
-        public async Task<ActionResult<IEnumerable<UpdateGovernorateDto>>> GetAllWithCities()
-        {
-            var governorates = await _governorateManager.GetAllGovernorateWithCitiesAsync();
-            return Ok(governorates);
-        }
-
-
+      
         [HttpGet("all")]
         [TypeFilter(typeof(GpAttribute))]
         public async Task<ActionResult<IEnumerable<ShowGovernorateDto>>> GetAllWithDeleted([FromQuery] GSpecParams govSpecParams)
@@ -72,6 +48,7 @@ namespace Shipping.API.Controllers
 
         }
 
+
         [HttpPut("{id}")]
         [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> Update(int id, UpdateGovernorateDto governorateDto)
@@ -97,8 +74,8 @@ namespace Shipping.API.Controllers
 
         }
 
+
         [HttpDelete]
-       
         [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> Delete(int id)
         {
@@ -118,7 +95,20 @@ namespace Shipping.API.Controllers
 
         }
 
-       
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ShowGovernorateDto>>> GetAll()
+        {
+            var governorates = await _governorateManager.GetAllGovernorateAsync();
+            return Ok(governorates);
+        }
+
+
+        [HttpGet("allWithCity")]
+        public async Task<ActionResult<IEnumerable<UpdateGovernorateDto>>> GetAllWithCity()
+        {
+            var governorates = await _governorateManager.GetAllGovernorateWithCityAsync();
+            return Ok(governorates);
+        }
 
 
 

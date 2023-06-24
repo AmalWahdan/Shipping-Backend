@@ -21,7 +21,7 @@ namespace Shipping.API.Controllers
 
 
         [HttpGet]
-        //[TypeFilter(typeof(GpAttribute))]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<ActionResult<IEnumerable<ShowCityDto>>> GetAllCities( int id)
         {
             var cities = await _cityManager.GetAllAsync(id);
@@ -40,6 +40,7 @@ namespace Shipping.API.Controllers
 
             return Ok();
         }
+
         [HttpGet("{id}")]
         [TypeFilter(typeof(GpAttribute))]
         public async Task<ActionResult<UpdateCityDto>> GetById(int id)
