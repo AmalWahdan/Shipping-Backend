@@ -22,13 +22,14 @@ namespace Shipping.API.Controllers
 
         [HttpGet]
         //[TypeFilter(typeof(GpAttribute))]
-        public async Task<ActionResult<IEnumerable<ShowCityDto>>> GetAllCities()
+        public async Task<ActionResult<IEnumerable<ShowCityDto>>> GetAllCities( int id)
         {
-            var cities = await _cityManager.GetAllCityWithDeletedAsync();
+            var cities = await _cityManager.GetAllAsync(id);
             return Ok(cities);
         }
 
         [HttpPost]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<ActionResult<int>> CreateCity(AddCityDto cityDto)
         {
             var result = await _cityManager.CreateCityAsync(cityDto);
@@ -40,6 +41,7 @@ namespace Shipping.API.Controllers
             return Ok();
         }
         [HttpGet("{id}")]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<ActionResult<UpdateCityDto>> GetById(int id)
         {
             var city = await _cityManager.GetCityAsync(id);
@@ -51,6 +53,7 @@ namespace Shipping.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<ActionResult<int>> UpdateCity(int id, UpdateCityDto cityDto)
         {
             if (id != cityDto.Id)
@@ -72,6 +75,7 @@ namespace Shipping.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<ActionResult<int>> DeleteCity(int id)
         {
             var result = await _cityManager.DeleteCityAsync(id);

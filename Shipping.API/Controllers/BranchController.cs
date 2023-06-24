@@ -18,6 +18,10 @@ namespace Shipping.API.Controllers
             _branchManager = branchManager;
         }
 
+
+
+
+
         [HttpGet("{id}")]
         [TypeFilter(typeof(GpAttribute))]
         public async Task<ActionResult<getBranchByIdDto>> GetById(int id)
@@ -40,12 +44,7 @@ namespace Shipping.API.Controllers
         }
 
       
-        [HttpGet("all")]
-        public async Task<ActionResult> GetAll()
-        {
-            var branches = await _branchManager.GetAllAsync();
-            return Ok(branches);
-        }
+       
 
         
         [HttpPost]
@@ -115,6 +114,14 @@ namespace Shipping.API.Controllers
                 return Ok();
             }
             return StatusCode(500);
+        }
+
+
+        [HttpGet("all")]
+        public async Task<ActionResult> GetAll()
+        {
+            var branches = await _branchManager.GetAllAsync();
+            return Ok(branches);
         }
 
     }

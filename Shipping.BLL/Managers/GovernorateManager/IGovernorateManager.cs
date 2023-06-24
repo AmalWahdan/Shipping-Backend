@@ -14,7 +14,6 @@ namespace Shipping.BLL.Managers
 
        
         Task<IEnumerable<ShowGovernorateWithCityDto>> GetAllGovernorateWithCityAsync();
-        Task<IEnumerable<ReadGovernoratesDto>> GetAllGovernorateWithCitiesAsync();
         Task<Pagination<ShowGovernorateDto>> GetAllGovernorateWithDeletedAsync(GSpecParams govSpecParams);
         Task<IEnumerable<UpdateGovernorateDto>> GetAllGovernorateAsync();
         Task<int> CreateGovernorateAsync(AddGovernorateDto GovernorateDto);

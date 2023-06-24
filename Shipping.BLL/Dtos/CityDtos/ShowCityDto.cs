@@ -13,9 +13,7 @@ namespace Shipping.BLL.Dtos
         public string Name { get; set; }
         public double Price { get; set; }
         public double? Pickup { get; set; }
-        public bool IsDeleted { get; set; }
         public int GovernorateId { get; set; }
 
-        public string GovernorateName { get; set; }
     }
 }

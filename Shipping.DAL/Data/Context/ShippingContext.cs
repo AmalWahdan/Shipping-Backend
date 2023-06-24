@@ -24,6 +24,7 @@ namespace Shipping.DAL.Data
         public ShippingContext(DbContextOptions options) : base(options)
 		{
 
+
 		}
 
         List<Permission> permissions = new List<Permission>()
@@ -109,15 +110,14 @@ namespace Shipping.DAL.Data
         {
             Id = 1,
             DefaultWeight = 10,
-            AdditionalPrice = 30
+            AdditionalPrice = 5
         };
 
         DeliverToVillage deliverToVillage = new DeliverToVillage()
         {
             Id = 1,
-            AdditionalCost = 20
+            AdditionalCost = 10
         };
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
             modelBuilder.Entity<Permission>().HasData(permissions);

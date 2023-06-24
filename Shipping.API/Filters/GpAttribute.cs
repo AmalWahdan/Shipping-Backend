@@ -26,13 +26,11 @@ namespace Shipping.API.Filters
         {
             var actionName = context.HttpContext.Request.Method.ToLower();
             var controllerName = context.Controller.GetType().Name.ToLower();
-
             string operation = string.Empty;
-            List<GroupPermissionDto> groupPermissions = new List<GroupPermissionDto>();
             var token = getToken(context);
             var groupId = GetGroupId(token);
             bool isValid = true;
-            
+            List<GroupPermissionDto> groupPermissions = new List<GroupPermissionDto>();
             if (groupId !=null)
             {
                 int id = int.Parse(groupId);

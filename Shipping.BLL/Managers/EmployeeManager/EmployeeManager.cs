@@ -40,23 +40,39 @@ namespace Shipping.BLL.Managers
             return await _employeeRepo.UpdateAsync(employee);
         
         }
+       
         public async Task<int> UpdateEmployee(EmployeeUpdateDto updateDto)
         {
-         
             var employee = await _employeeRepo.GetByCriteriaAsync(e => e.Id == updateDto.Id && !e.IsDeleted);
             if (employee == null)
             {
                 return 0;
             }
-
             employee.Name = updateDto.Name;
             employee.PhoneNumber = updateDto.PhoneNumber;
             employee.Address = updateDto.Address;
             employee.GroupId = updateDto.GroupId;
             employee.BranchId = updateDto.BranchId;
-          
+
+            //if (updateDto.GroupId != null)
+            //{
+            //    var existingClaims = await _userManager.GetClaimsAsync(employee);
+            //    var groupIdClaim = existingClaims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+
+            //    if (groupIdClaim != null)
+            //    {
+            //        existingClaims.Remove(groupIdClaim);
+            //    }
+
+            //    existingClaims.Add(new Claim(ClaimTypes.Role, updateDto.GroupId.ToString()));
+
+            //    await _userManager.RemoveClaimsAsync(employee, existingClaims.Where(c => c.Type == ClaimTypes.Role));
+            //    await _userManager.AddClaimsAsync(employee, existingClaims);
+            //}
+
             return await _employeeRepo.UpdateAsync(employee);
         }
+
         public async Task<int> UpdateEmployeePassword(UpdatePasswordDtos updatePassDto)
         {
             
@@ -97,6 +113,7 @@ namespace Shipping.BLL.Managers
                 new Claim(ClaimTypes.Name, employee.Name),
                 new Claim(ClaimTypes.Role,registrationDTO.GroupId.ToString())
             };
+
             await _userManager.AddClaimsAsync(employee, claims);
             return 1;
 

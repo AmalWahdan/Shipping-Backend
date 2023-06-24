@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Shipping.API.Filters;
 using Shipping.BLL.Dtos;
 using Shipping.BLL.Managers;
 using Shipping.DAL.Params;
@@ -17,6 +18,7 @@ namespace Shipping.API.Controllers
         }
 
         [HttpPost]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> RegisterEmployee(EmployeeRegisterDto registrationDto)
         {
 
@@ -35,7 +37,9 @@ namespace Shipping.API.Controllers
 
         }
 
+
         [HttpDelete]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> DeleteEmployee(string id)
         {
             var result = await _employeeManager.DeleteEmployee(id);
@@ -47,6 +51,7 @@ namespace Shipping.API.Controllers
         }
 
         [HttpPut]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> UpdateEmployee(string id, EmployeeUpdateDto updateDto)
         {
 
@@ -70,6 +75,18 @@ namespace Shipping.API.Controllers
 
 
         }
+        [HttpGet]
+        [TypeFilter(typeof(GpAttribute))]
+        public async Task<IActionResult> GetAllEmployees([FromQuery] GSpecParams employeeSpecParams)
+        {
+
+            var employees = await _employeeManager.GetAllEmployeesAsync(employeeSpecParams);
+            return Ok(employees);
+
+
+        }
+
+
 
         [HttpPut("pass")]
         public async Task<IActionResult> UpdateEmployeePass(string id, UpdatePasswordDtos updateDto)
@@ -107,16 +124,6 @@ namespace Shipping.API.Controllers
                 return NotFound();
             }
             return Ok(employee);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetAllEmployees([FromQuery] GSpecParams employeeSpecParams)
-        {
-
-            var employees = await _employeeManager.GetAllEmployeesAsync(employeeSpecParams);
-            return Ok(employees);
-
-
         }
 
 
