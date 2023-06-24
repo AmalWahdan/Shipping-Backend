@@ -87,6 +87,7 @@ namespace Shipping.DAL.Repositories
         }
         public IEnumerable<Order> SearchByDateAndStatus(int pageNumer, int pageSize, DateTime fromDate, DateTime toDate, OrderStatus status)
         {
+            toDate = toDate.AddDays(1);
             return _context.Orders
                .Where(d => d.isDeleted == false && d.Date > fromDate && d.Date < toDate && d.orderStatus == status)
                .Skip((pageNumer - 1) * pageSize)
@@ -98,6 +99,7 @@ namespace Shipping.DAL.Repositories
         }
         public int CountOrdersByDateAndStatus(DateTime fromDate, DateTime toDate, OrderStatus status)
         {
+            toDate = toDate.AddDays(1);
             return _context.Orders
                .Where(d => d.isDeleted == false && d.Date > fromDate && d.Date < toDate && d.orderStatus == status)
                .Count();

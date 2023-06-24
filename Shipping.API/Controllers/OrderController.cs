@@ -70,10 +70,6 @@ namespace Shipping.API.Controllers
             return BadRequest(new { message = "Item not found" });
         }
 
-
-        [Authorize(Policy = "RepresentativeOnly")]
-        [Authorize(Policy = "MerchantOnly")]
-        [TypeFilter(typeof(GpAttribute))]
         //Employee
 
         [HttpGet]
