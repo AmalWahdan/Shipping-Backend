@@ -4,6 +4,7 @@ using Shipping.BLL.Dtos;
 using Shipping.BLL;
 using Shipping.DAL.Data.Models;
 using Shipping.BLL.Managers;
+using Shipping.API.Filters;
 
 namespace Shipping.API.Controllers
 {
@@ -17,8 +18,10 @@ namespace Shipping.API.Controllers
         {
             this._deliverToVillageManager = deliverToVillageManager;
         }
+
+
         [HttpGet("{id}")]
-        public async Task<ActionResult<DeliverToVillage>> GetShippingTypeById(int id)
+        public async Task<ActionResult<DeliverToVillage>> GetDeliverToVillageById(int id)
         {
             var result = await _deliverToVillageManager.GetDeliverToVillageByIdAsync(id);
             if (result == null)
@@ -28,23 +31,11 @@ namespace Shipping.API.Controllers
 
             return Ok(result);
         }
-        [HttpPost]
-        public async Task<ActionResult> Add(DeliverToVillage d)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var result = await _deliverToVillageManager.Add(d);
-            if (result > 0)
-            {
-                return Ok("Deliver To Village Cost was added successfully.");
-            }
-            ModelState.AddModelError("save", "Can't save Deliver To Village Cost may be something wrong!");
-            return BadRequest(ModelState);
-        }
+       
+      
 
         [HttpPut]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<ActionResult> Update(DeliverToVillage d)
         {
             if (!ModelState.IsValid)

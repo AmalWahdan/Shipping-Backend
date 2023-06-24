@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Shipping.BLL.Dtos;
 using Shipping.BLL;
 using System.Threading.Tasks;
+using Shipping.API.Filters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Shipping.API.Controllers
 {
@@ -17,7 +19,9 @@ namespace Shipping.API.Controllers
             this._reasonsTypeManager = refusalTypeManager;
         }
 
+
         [HttpPost]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<ActionResult> Add(AddReasonsRefusalTypeDtos order)
         {
             if (!ModelState.IsValid)
@@ -36,6 +40,7 @@ namespace Shipping.API.Controllers
 
 
         [HttpPut]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<ActionResult> Update(UpdateReasonsRefusalTypeDtos order)
         {
             if (!ModelState.IsValid)
@@ -54,6 +59,7 @@ namespace Shipping.API.Controllers
 
 
         [HttpDelete]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<ActionResult> Delete(int ReasonsRefusalTypeId)
         {
             var result =await _reasonsTypeManager.Delete(ReasonsRefusalTypeId);
@@ -66,7 +72,20 @@ namespace Shipping.API.Controllers
 
 
         [HttpGet]
+        [Route("GetAllForDropDown")]
+        [Authorize(Policy = "RepresentativeOnly")]
+        public async Task<ActionResult<IEnumerable<ShowReasonsRefusalTypeDtos>>> GetAllForGropDown()
+        {
+            var reasons = await _reasonsTypeManager.GetAll();
+            return Ok(reasons);
+        }
+
+
+
+        [HttpGet]
         [Route("GetAll")]
+        [TypeFilter(typeof(GpAttribute))]
+       
         public async Task<ActionResult<IEnumerable<ShowReasonsRefusalTypeDtos>>> GetAll()
         {
             var reasons = await _reasonsTypeManager.GetAll();

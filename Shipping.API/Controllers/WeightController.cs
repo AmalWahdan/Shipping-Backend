@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Shipping.API.Filters;
 using Shipping.BLL;
 using Shipping.BLL.Dtos;
 using Shipping.DAL.Data.Models;
@@ -16,34 +17,13 @@ namespace Shipping.API.Controllers
         {
             this._weightsManager = weightsManager;
         }
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Weight>> GetShippingTypeById(int id)
-        {
-            var weight = await _weightsManager.GetWeightByIdAsync(id);
-            if (weight== null)
-            {
-                return NotFound();
-            }
 
-            return Ok(weight);
-        }
-        [HttpPost]
-        public async Task<ActionResult> Add(AddWeightDto weight)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var result =await _weightsManager.Add(weight);
-            if (result >0)
-            {
-                return Ok("Weight was added successfully.");
-            }
-            ModelState.AddModelError("save", "Can't save Weight may be something wrong!");
-            return BadRequest(ModelState);
-        }
 
+      
+
+  
         [HttpPut]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<ActionResult> Update(UpdateWeightDtos weight)
         {
             if (!ModelState.IsValid)
@@ -58,6 +38,19 @@ namespace Shipping.API.Controllers
             }
             ModelState.AddModelError("save", "Can't save Weight may be something wrong!");
             return BadRequest(ModelState);
+        }
+
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Weight>> GetWeightById(int id)
+        {
+            var weight = await _weightsManager.GetWeightByIdAsync(id);
+            if (weight == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(weight);
         }
     }
 }

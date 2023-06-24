@@ -22,9 +22,9 @@ namespace Shipping.BLL.Managers
             _cityRepository = cityRepository;
             _governorateRepository=governorateRepository;
         }
-        public async Task<IEnumerable<ShowCityDto>> GetAllCityWithDeletedAsync()
+        public async Task<IEnumerable<ShowCityDto>> GetAllAsync(int govId )
         {
-            var cities = _cityRepository.GetAllAsync().Result.Include(c=>c.Governorate);
+            var cities = _cityRepository.GetAllAsync().Result.Where(c=>c.isDeleted==false && c.GovernorateId== govId);
          
 
             return cities.Select(c => new ShowCityDto
@@ -33,11 +33,17 @@ namespace Shipping.BLL.Managers
                 Name = c.Name,
                 Price = c.Price,
                 Pickup = c.Pickup,
-                IsDeleted = c.isDeleted,
                 GovernorateId = c.GovernorateId,
-                GovernorateName =c.Governorate.Name
+             
             });
+
         }
+       
+        
+        
+        
+        
+        
         public async Task<UpdateCityDto> GetCityAsync(int id)
         {
             var city = await _cityRepository.GetByIdAsync(id);
@@ -73,7 +79,6 @@ namespace Shipping.BLL.Managers
 
             return await _cityRepository.AddAsync(city);
         }
-
         public async Task<int> UpdateCityAsync(UpdateCityDto cityDto)
         {
             var city = await _cityRepository.GetByIdAsync(cityDto.Id);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Shipping.API.Filters;
 using Shipping.BLL.Dtos;
 using Shipping.BLL.Managers;
 using Shipping.DAL.Params;
@@ -16,35 +17,21 @@ namespace Shipping.API.Controllers
         {
             _governorateManager = governorateManager;
         }
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ShowGovernorateDto>>> GetAll()
-        {
-            var governorates = await _governorateManager.GetAllGovernorateAsync();
-            return Ok(governorates);
-        }
 
 
-        [HttpGet("allWithCity")]
-        public async Task<ActionResult<IEnumerable<UpdateGovernorateDto>>> GetAllWithCity()
-        {
-            var governorates = await _governorateManager.GetAllGovernorateWithCityAsync();
-            return Ok(governorates);
-        }
-        [HttpGet("allCitiesWithGovernorate")]
-        public async Task<ActionResult<IEnumerable<UpdateGovernorateDto>>> GetAllWithCities()
-        {
-            var governorates = await _governorateManager.GetAllGovernorateWithCitiesAsync();
-            return Ok(governorates);
-        }
-
+      
         [HttpGet("all")]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<ActionResult<IEnumerable<ShowGovernorateDto>>> GetAllWithDeleted([FromQuery] GSpecParams govSpecParams)
         {
             var governorates = await _governorateManager.GetAllGovernorateWithDeletedAsync(govSpecParams);
             return Ok(governorates);
         }
 
+
+
         [HttpPost]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<ActionResult<int>> Create(AddGovernorateDto governorateDto)
         {
             if (!ModelState.IsValid)
@@ -61,7 +48,9 @@ namespace Shipping.API.Controllers
 
         }
 
+
         [HttpPut("{id}")]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> Update(int id, UpdateGovernorateDto governorateDto)
         {
             if (id != governorateDto.Id)
@@ -85,7 +74,9 @@ namespace Shipping.API.Controllers
 
         }
 
+
         [HttpDelete]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _governorateManager.DeleteGovernorateAsync(id);
@@ -104,7 +95,20 @@ namespace Shipping.API.Controllers
 
         }
 
-       
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ShowGovernorateDto>>> GetAll()
+        {
+            var governorates = await _governorateManager.GetAllGovernorateAsync();
+            return Ok(governorates);
+        }
+
+
+        [HttpGet("allWithCity")]
+        public async Task<ActionResult<IEnumerable<UpdateGovernorateDto>>> GetAllWithCity()
+        {
+            var governorates = await _governorateManager.GetAllGovernorateWithCityAsync();
+            return Ok(governorates);
+        }
 
 
 

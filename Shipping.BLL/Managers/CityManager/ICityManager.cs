@@ -11,7 +11,7 @@ namespace Shipping.BLL.Managers
     public interface ICityManager
     {
 
-        Task<IEnumerable<ShowCityDto>> GetAllCityWithDeletedAsync();
+        Task<IEnumerable<ShowCityDto>> GetAllAsync(int govId);
         Task<int> CreateCityAsync(AddCityDto   cityDto);
         Task<int> UpdateCityAsync(UpdateCityDto cityDto);
         Task<int> DeleteCityAsync(int id);

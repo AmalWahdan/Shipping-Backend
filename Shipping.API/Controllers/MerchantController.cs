@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Shipping.API.Filters;
 using Shipping.BLL.Dtos;
 using Shipping.BLL.Managers;
 using Shipping.DAL.Params;
@@ -18,6 +19,7 @@ namespace Shipping.API.Controllers
         }
 
         [HttpPost]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> RegisterMerchant(MerchantRegisterDto registrationDto)
         {
             if (!ModelState.IsValid)
@@ -36,6 +38,7 @@ namespace Shipping.API.Controllers
 
 
         [HttpPut]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> UpdateMerchant(string id, MerchantUpdateDto updateDto)
         {
 
@@ -55,6 +58,32 @@ namespace Shipping.API.Controllers
 
             return StatusCode(500);
         }
+
+      
+        [HttpDelete]
+        [TypeFilter(typeof(GpAttribute))]
+        public async Task<IActionResult> DeleteMerchant(string id)
+        {
+            var result = await _merchantManager.DeleteMerchant(id);
+
+            if (result > 0)
+            {
+                return Ok();
+            }
+            return StatusCode(500);
+        }
+
+       
+
+        [HttpGet]
+        [TypeFilter(typeof(GpAttribute))]
+        public async Task<IActionResult> GetAllMerchants([FromQuery] GSpecParams merchantSpecParams)
+        {
+            var merchants = await _merchantManager.GetAllMarchentsAsync(merchantSpecParams);
+            return Ok(merchants);
+        }
+
+
 
         [HttpPut("pass")]
         public async Task<IActionResult> UpdateMerchantPass(string id, UpdatePasswordDtos updateDto)
@@ -77,17 +106,7 @@ namespace Shipping.API.Controllers
             return StatusCode(500);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteMerchant(string id)
-        {
-            var result = await _merchantManager.DeleteMerchant(id);
 
-            if (result > 0)
-            {
-                return Ok();
-            }
-            return StatusCode(500);
-        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetMerchantById(string id)
@@ -100,13 +119,6 @@ namespace Shipping.API.Controllers
             }
 
             return Ok(merchant);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetAllMerchants([FromQuery] GSpecParams merchantSpecParams)
-        {
-            var merchants = await _merchantManager.GetAllMarchentsAsync(merchantSpecParams);
-            return Ok(merchants);
         }
     }
 }

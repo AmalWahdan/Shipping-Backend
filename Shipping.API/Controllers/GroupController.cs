@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Shipping.API.Filters;
 using Shipping.BLL.Dtos;
 using Shipping.BLL.Managers;
 using Shipping.DAL.Params;
@@ -14,7 +15,10 @@ namespace Shipping.API.Controllers
         {
             _groupManager = groupManager;
         }
+
+
         [HttpPost]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> CreateGroup(CreateGroupDto groupDto)
         {
             if (!ModelState.IsValid)
@@ -26,6 +30,7 @@ namespace Shipping.API.Controllers
         }
        
         [HttpGet]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> GetGroups([FromQuery] GSpecParams groupSpecParams)
         {
             var groups = await _groupManager.GetAllAsync(groupSpecParams);
@@ -33,25 +38,8 @@ namespace Shipping.API.Controllers
 
         }
 
-        [HttpGet("all")]
-       
-        public async Task<IActionResult> GetGroupsForSelect()
-        {
-            var groups = await _groupManager.GetAllAsync();
-            return Ok(groups);
-
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetGroupWithPermissions(int id)
-        {
-            var group = await _groupManager.GetGroupByIdWithPermissionsAsync(id);
-            if (group == null)
-                return NotFound();
-            return Ok(group);
-        }
-        
         [HttpPut("{id}")]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> UpdateGroup(int id, [FromBody] UpdateGroupDto groupDto)
         {
             if (id != groupDto.Id)
@@ -63,7 +51,9 @@ namespace Shipping.API.Controllers
                 return BadRequest(new { message = "Invalid GovernorateId" });
             return Ok();
         }
+
         [HttpDelete("{id}")]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> DeleteGroup(int id)
         {
             var result = await _groupManager.DeleteGroupAsync(id);
@@ -79,5 +69,25 @@ namespace Shipping.API.Controllers
 
             return Ok(new { Message = "Group Deleted Successfully" });
         }
+
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetGroupsForSelect()
+        {
+            var groups = await _groupManager.GetAllAsync();
+            return Ok(groups);
+
+        }
+
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetGroupWithPermissions(int id)
+        {
+            var group = await _groupManager.GetGroupByIdWithPermissionsAsync(id);
+            if (group == null)
+                return NotFound();
+            return Ok(group);
+        }
+
     }
 }

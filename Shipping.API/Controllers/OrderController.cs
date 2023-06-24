@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Shipping.API.Filters;
 using Shipping.BLL;
 using Shipping.BLL.Dtos;
 using Shipping.DAL.Data.Models;
@@ -17,7 +19,8 @@ namespace Shipping.API.Controllers
             this._orderManager = orderManager;
         }
 
-        [HttpPost] 
+        [HttpPost]
+        [Authorize(Policy = "MerchantOnly")]
         public async Task<ActionResult<AddOrderResultDto>> Add(AddOrderDto order)
         {
             var result = await _orderManager.Add(order);
@@ -28,8 +31,10 @@ namespace Shipping.API.Controllers
             ModelState.AddModelError("save", "Can't save Order may be some ID'S wrong!");
             return BadRequest(ModelState);
         }
-                
+              
+        
         [HttpPut]
+        [Authorize(Policy = "MerchantOnly")]
         public async Task<ActionResult<UpdateOrderResultDto>> Update(UpdateOrderDto order)
         {
             var result =await _orderManager.Update(order);
@@ -42,6 +47,7 @@ namespace Shipping.API.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Policy = "MerchantOnly")]
         public ActionResult Delete(int orderId)
         {
             var result = _orderManager.Delete(orderId);
@@ -65,16 +71,21 @@ namespace Shipping.API.Controllers
         }
 
 
+        [Authorize(Policy = "RepresentativeOnly")]
+        [Authorize(Policy = "MerchantOnly")]
+        [TypeFilter(typeof(GpAttribute))]
         //Employee
 
         [HttpGet]
         [Route("CountOrdersForEmployeeByStatus")]
+        [TypeFilter(typeof(GpAttribute))]
         public ActionResult CountOrdersForEmployeeByStatus()
         {
             return Ok(_orderManager.CountOrdersForEmployeeByStatus());
         }
         [HttpGet]
         [Route("GetOrdersForEmployee")]
+        [TypeFilter(typeof(GpAttribute))]
         public ActionResult<IEnumerable<ReadOrderDto>> GetOrdersForEmployee(int statusId, int pageNubmer, int pageSize, string searchText = "")
         {
             return Ok(_orderManager.GetOrdersForEmployee(searchText, statusId, pageNubmer, pageSize));
@@ -82,6 +93,7 @@ namespace Shipping.API.Controllers
 
         [HttpGet]
         [Route("GetCountOrdersForEmployee")]
+        [TypeFilter(typeof(GpAttribute))]
         public ActionResult<int> GetCountOrdersForEmployee(int statusId, string searchText = "")
         {
             return Ok(_orderManager.GetCountOrdersForEmployee(statusId, searchText));
@@ -89,6 +101,7 @@ namespace Shipping.API.Controllers
       
         [HttpPut]
         [Route("SelectRepresentative")]
+        [TypeFilter(typeof(GpAttribute))]
         public ActionResult SelectRepresentative(int orderId, string representativeId)
         {
             bool result = _orderManager.SelectRepresentative(orderId, representativeId);
@@ -100,7 +113,9 @@ namespace Shipping.API.Controllers
             return BadRequest(new { message = "Item not found" });
         }
 
+
         [HttpGet("DropdownListRepresentative")]
+        [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> DropdownListRepresentative(int orderId)
         {
             try
@@ -117,6 +132,7 @@ namespace Shipping.API.Controllers
         //Merchant
         [HttpGet]
         [Route("CountOrdersForMerchantByStatus")]
+        [Authorize(Policy = "MerchantOnly")]
         public ActionResult CountOrdersForMerchantByStatus(string id)
         {
             return Ok(_orderManager.CountOrdersForMerchantByStatus(id));
@@ -124,6 +140,7 @@ namespace Shipping.API.Controllers
 
         [HttpGet]
         [Route("GetOrdersForMerchant")]
+        [Authorize(Policy = "MerchantOnly")]
         public ActionResult<IEnumerable<ReadOrderDto>> GetOrdersForMerchant(string merchantId, int statusId, int pageNubmer, int pageSize, string searchText = "")
         {
             return Ok(_orderManager.GetOrdersForMerchant(searchText, merchantId, statusId, pageNubmer, pageSize));
@@ -131,10 +148,12 @@ namespace Shipping.API.Controllers
 
         [HttpGet]
         [Route("GetCountOrdersForMerchant")]
+        [Authorize(Policy = "MerchantOnly")]
         public ActionResult<int> GetCountOrdersForMerchant(string merchantId, int statusId, string searchText = "")
         {
             return Ok(_orderManager.GetCountOrdersForMerchant(merchantId, statusId, searchText));
         }
+
 
         //Employee and Merchant
         [HttpPut]
@@ -153,6 +172,7 @@ namespace Shipping.API.Controllers
         //Representative 
         [HttpGet]
         [Route("CountOrdersForRepresentativeByStatus")]
+        [Authorize(Policy = "RepresentativeOnly")]
         public ActionResult CountOrdersForRepresentativeByStatus(string representativeId)
         {
             return Ok(_orderManager.CountOrdersForRepresentativeByStatus(representativeId));
@@ -160,6 +180,7 @@ namespace Shipping.API.Controllers
        
         [HttpGet]
         [Route("GetOrdersForRepresentative")]
+        [Authorize(Policy = "RepresentativeOnly")]
         public ActionResult<IEnumerable<ReadOrderDto>> GetOrdersForRepresentative(string representativeId, int statusId, int pageNubmer, int pageSize, string searchText = "")
         {
             return Ok(_orderManager.GetOrdersForRepresentative(representativeId, statusId, pageNubmer, pageSize, searchText));
@@ -167,6 +188,7 @@ namespace Shipping.API.Controllers
 
         [HttpGet]
         [Route("GetCountOrdersForRepresentative")]
+        [Authorize(Policy = "RepresentativeOnly")]
         public ActionResult<int> GetCountOrdersForRepresentative(string representativeId, int statusId, string searchText = "")
         {
             return Ok(_orderManager.GetCountOrdersForRepresentative(representativeId, statusId, searchText));
@@ -174,6 +196,7 @@ namespace Shipping.API.Controllers
 
         [HttpPut]
         [Route("ChangeStatusAndReasonRefusal")]
+        [Authorize(Policy = "RepresentativeOnly")]
         public ActionResult ChangeStatusAndReasonRefusal(int orderId, OrderStatus status, int? reasonRefusal)
         {
             bool result = _orderManager.ChangeStatusAndReasonRefusal(orderId, status, reasonRefusal);
