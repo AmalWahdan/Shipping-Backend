@@ -109,7 +109,7 @@ namespace Shipping.API
             builder.Services.AddAuthorization(options =>
             {
                 options.AddPolicy("MerchantOnly", policy => policy
-                    .RequireClaim(ClaimTypes.Role, "Trader")
+                    .RequireClaim(ClaimTypes.Role, "Merchant")
                     .RequireClaim(ClaimTypes.NameIdentifier));
                 
                options.AddPolicy("RepresentativeOnly", policy => policy
