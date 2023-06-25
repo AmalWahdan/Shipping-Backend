@@ -14,27 +14,31 @@ namespace Shipping.API.Filters
     {
         private readonly IConfiguration _configuration;
         private readonly IGroupPermissionManager _groupPermissionManager ;
+        private readonly IEmployeeManager _employeeManager;
         public GpAttribute(IConfiguration configuration,
-        IGroupPermissionManager groupPermissionManager)
+        IGroupPermissionManager groupPermissionManager,
+        IEmployeeManager employeeManager)
         {
             _configuration = configuration;
             _groupPermissionManager = groupPermissionManager;
-            
+
+            _employeeManager = employeeManager;
+
         }
 
-        public override void OnActionExecuting(ActionExecutingContext context)
+        public override  void OnActionExecuting(ActionExecutingContext context)
         {
             var actionName = context.HttpContext.Request.Method.ToLower();
             var controllerName = context.Controller.GetType().Name.ToLower();
             string operation = string.Empty;
             var token = getToken(context);
-            var groupId = GetGroupId(token);
+            var groupId =  GetGroupId(token);
             bool isValid = true;
             List<GroupPermissionDto> groupPermissions = new List<GroupPermissionDto>();
-            if (groupId !=null)
+            if (groupId != 0)
             {
-                int id = int.Parse(groupId);
-                var permissions = _groupPermissionManager.HasPermission(id);
+                
+                var permissions = _groupPermissionManager.HasPermission(groupId);
                 if (permissions != null)
                 {
                     groupPermissions = permissions.Result.Where(p => controllerName.Contains(p.Name.ToLower())).ToList();
@@ -74,7 +78,8 @@ namespace Shipping.API.Filters
             }
 
         }
-        string GetGroupId(string token)
+
+         int  GetGroupId(string token)
         {
             var secret = _configuration["SecretKey"] ?? string.Empty;
             var key = Encoding.ASCII.GetBytes(secret);
@@ -86,8 +91,10 @@ namespace Shipping.API.Filters
                 ValidateIssuer = false,
                 ValidateAudience = false
             };
-            var groupId = handler.ValidateToken(token, validations, out var tokenSecure).Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ElementAt(0);
-            return groupId;
+            var empId = handler.ValidateToken(token, validations, out var tokenSecure).Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).ElementAt(0);
+            var emp =   _employeeManager.GetEmployeeById(empId).Result;
+           
+            return  emp.GroupId;
         }
         string getToken(ActionExecutingContext context)
         {

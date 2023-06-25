@@ -18,7 +18,7 @@ namespace Shipping.API.Controllers
         }
 
         [HttpPost]
-        [TypeFilter(typeof(GpAttribute))]
+       // [TypeFilter(typeof(GpAttribute))]
         public async Task<IActionResult> RegisterEmployee(EmployeeRegisterDto registrationDto)
         {
 

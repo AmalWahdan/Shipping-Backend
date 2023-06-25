@@ -27,29 +27,65 @@ namespace Shipping.BLL.Managers
             _configuration = configuration;
 
         }
-        public async Task<string> LoginUser(LoginDtos loginDTO)
+
+        public async Task<TokenDataDto> LoginUser(LoginDtos loginDTO)
         {
             var user = await _userManager.FindByEmailAsync(loginDTO.Email);
         
             if (user == null || user.IsDeleted == true)
             {
-                throw new Exception("User not found.");
+                return null;
             }
 
             var result = await _userManager.CheckPasswordAsync(user, loginDTO.Password);
 
             if (!result)
             {
-                throw new Exception("Invalid email or password.");
+                return null;
+            }
+            string token = await GenerateToken(user);
+
+            
+            if (user is Employee) {
+                Employee emp = (Employee)user;
+                return new TokenDataDto
+                {
+                    tokenData = token,
+                    name = emp.Name,
+                    groupId = emp.GroupId
+                };
             }
 
-            return await GenerateToken(user);
+            else
+            {
+                return new TokenDataDto
+                {
+                    tokenData = token,
+                    name = user.Name,
+                    groupId = 0
+                };
 
+            }
+              
         }
 
         public async Task LogoutUser()
         {
             await _signInManager.SignOutAsync();
+        }
+
+        public async Task<int> UniqeEmail(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+                return 0;
+            else
+                return 1;
+        }
+        public async Task<int> UniqueUsername(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            return user != null ? 0 : 1;
         }
 
 
@@ -70,10 +106,6 @@ namespace Shipping.BLL.Managers
             var tokenString = tokenHandler.WriteToken(token);
             return tokenString;
         }
-
-
-
-
 
     }
 }

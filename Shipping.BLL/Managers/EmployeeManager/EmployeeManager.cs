@@ -54,21 +54,7 @@ namespace Shipping.BLL.Managers
             employee.GroupId = updateDto.GroupId;
             employee.BranchId = updateDto.BranchId;
 
-            //if (updateDto.GroupId != null)
-            //{
-            //    var existingClaims = await _userManager.GetClaimsAsync(employee);
-            //    var groupIdClaim = existingClaims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
-
-            //    if (groupIdClaim != null)
-            //    {
-            //        existingClaims.Remove(groupIdClaim);
-            //    }
-
-            //    existingClaims.Add(new Claim(ClaimTypes.Role, updateDto.GroupId.ToString()));
-
-            //    await _userManager.RemoveClaimsAsync(employee, existingClaims.Where(c => c.Type == ClaimTypes.Role));
-            //    await _userManager.AddClaimsAsync(employee, existingClaims);
-            //}
+           
 
             return await _employeeRepo.UpdateAsync(employee);
         }
@@ -111,7 +97,7 @@ namespace Shipping.BLL.Managers
                 new Claim(ClaimTypes.NameIdentifier, employee.Id),
                 new Claim(ClaimTypes.Email, employee.Email),
                 new Claim(ClaimTypes.Name, employee.Name),
-                new Claim(ClaimTypes.Role,registrationDTO.GroupId.ToString())
+                new Claim(ClaimTypes.Role,"Employee")
             };
 
             await _userManager.AddClaimsAsync(employee, claims);

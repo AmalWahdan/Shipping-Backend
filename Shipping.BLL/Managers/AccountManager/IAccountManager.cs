@@ -10,10 +10,13 @@ namespace Shipping.BLL.Managers
 {
     public interface IAccountManager
     {
-        Task<string> LoginUser(LoginDtos loginDTO);
+        Task<TokenDataDto> LoginUser(LoginDtos loginDTO);
 
         Task LogoutUser();
-       
+        Task<int> UniqeEmail(string email);
+
+
+       Task<int> UniqueUsername(string username);
 
 
     }

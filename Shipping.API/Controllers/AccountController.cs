@@ -24,13 +24,18 @@ namespace Shipping.API.Controllers
             try
             {
                 var token = await _userManager.LoginUser(loginDTO);
-                return Ok(new { Token = token });
+                if (token == null)
+                    return Ok("Invalid");
+                else
+                    return Ok(new { Token = token });
             }
-            catch (Exception ex)
+            catch(Exception ex) 
             {
                 return BadRequest(ex.Message);
             }
         }
+
+
 
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
@@ -45,6 +50,42 @@ namespace Shipping.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("email")]
+        public async Task<IActionResult> UniqueEmail( string email)
+        {
+
+            var result =  await _userManager.UniqeEmail(email);
+               
+            if(result == 0)
+            return Ok("Invalid");
+
+            else if(result==1)    
+            return Ok("Valid");
+            
+
+            return BadRequest();
+
+        }
+
+        [HttpPost("userName")]
+        public async Task<IActionResult> UniqueUserName(string userName)
+        {
+
+            var result = await _userManager.UniqueUsername(userName);
+
+            if (result == 0)
+                return Ok("Invalid");
+            else if (result == 1)
+            {
+                return Ok("Valid");
+            }
+
+            return BadRequest();
+
+        }
+
+
     }
 
 
