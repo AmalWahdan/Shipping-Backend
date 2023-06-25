@@ -25,7 +25,7 @@ namespace Shipping.API.Controllers
             {
                 var token = await _userManager.LoginUser(loginDTO);
                 if (token == null)
-                    return Ok("Invalid");
+                    return Ok(new { message = "Invalid" });
                 else
                     return Ok(new { Token = token });
             }
@@ -58,10 +58,10 @@ namespace Shipping.API.Controllers
             var result =  await _userManager.UniqeEmail(email);
                
             if(result == 0)
-            return Ok("Invalid");
+            return Ok(new { message = "Invalid" });
 
             else if(result==1)    
-            return Ok("Valid");
+            return Ok(new { message = "Valid" });
             
 
             return BadRequest();
@@ -75,10 +75,10 @@ namespace Shipping.API.Controllers
             var result = await _userManager.UniqueUsername(userName);
 
             if (result == 0)
-                return Ok("Invalid");
+                return Ok(new { message = "Invalid" });
             else if (result == 1)
             {
-                return Ok("Valid");
+                return Ok(new { message = "Valid" });
             }
 
             return BadRequest();

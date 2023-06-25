@@ -75,7 +75,6 @@ namespace Shipping.API.Controllers
 
         [HttpGet]
         [Route("CountOrdersForEmployeeByStatus")]
-        [TypeFilter(typeof(GpAttribute))]
         public ActionResult CountOrdersForEmployeeByStatus()
         {
             return Ok(_orderManager.CountOrdersForEmployeeByStatus());
