@@ -322,7 +322,192 @@ namespace Shipping.BLL.Managers
             return _orderRepository.CountOrdersByDateAndStatus(fromDate,toDate,status);
         }
 
+
+        //Employee
+        public List<int> CountOrdersForEmployeeByStatus()
+        {
+            var listOrderStatus = _orderRepository.CountOrdersForEmployeeByStatus();
+            int[] countOrdres = new int[11];//size of enum
+
+            var statusGroups = listOrderStatus.GroupBy(i => i);
+
+            foreach (var group in statusGroups)
+            {
+                countOrdres[group.Key] = group.Count();
+            }
+            return countOrdres.ToList();
+        }
+        public int GetCountOrdersForEmployee(int statusId, string searchText)
+        {
+            if (statusId > 10 || statusId < 0)
+            {
+                return 0;
+            }
+            return _orderRepository.GetCountOrdersForEmployee(statusId,searchText);
+        }
+        public IEnumerable<ReadOrderDto> GetOrdersForEmployee(string searchText,int statusId, int pageNumer, int pageSize)
+        {
+            if (statusId > 10 || statusId < 0)
+            {
+                return null!;
+            }
+            return _orderRepository.GetOrdersForEmployee(searchText,statusId, pageNumer, pageSize).Select(o => new ReadOrderDto
+            {
+                Id=o.Id,
+                ClientName = o.ClientName,
+                Date = o.Date,
+                Governorate = o.Governorate!.Name,
+                City = o.City!.Name,
+                Cost = o.ProductTotalCost + o.OrderShippingTotalCost
+
+            });
+        }
+        public bool SelectRepresentative(int OrderId, string representativeId)
+        {
+            var order = _orderRepository.GetById(OrderId);
+            if (order == null)
+            {
+                return false;
+            }
+            else
+            {
+                order.RepresentativeId = representativeId;
+                order.orderStatus = OrderStatus.RepresentitiveDelivered;
+                _orderRepository.SaveChanges();
+                return true;
+            }
+        }
+        public async Task<List<DropdownListRepresentativeDto>> DropdownListRepresentativeAsync(int orderId)
+        {
+            var governorateId = _orderRepository.GetById(orderId)?.GovernorateId;
+
+            var representativeGovernate = await _representativeGovernateRepository.GetAllAsync();
+            var governorates = await _governorateRepository.GetAllAsync();
+            List<DropdownListRepresentativeDto> representatives = (from a in _userManager.Users
+                                                          join b in representativeGovernate  on a.Id equals b.RepresentativeId
+                                                          join c in governorates on b.GovernorateId equals governorateId
+                                                          select new DropdownListRepresentativeDto { Name = a.Name, Id = a.Id }).Distinct().ToList();
+
+
+            return representatives;
+
+
+        }
         
+        //Merchant
+        public List<int> CountOrdersForMerchantByStatus(string merchantId)
+        {
+            var listOrderStatus = _orderRepository.CountOrdersForMerchantByStatus(merchantId);
+            int[] countOrdres = new int[11];//size of enum
+
+            var statusGroups = listOrderStatus.GroupBy(i => i);
+
+            foreach (var group in statusGroups)
+            {
+                countOrdres[group.Key] = group.Count();
+            }
+            return countOrdres.ToList();
+        }
+        public int GetCountOrdersForMerchant(string merchantId, int statusId, string searchText)
+        {
+            if (statusId > 10 || statusId < 0)
+            {
+                return 0;
+            }
+            return _orderRepository.GetCountOrdersForMerchant(merchantId, statusId,searchText);
+        }
+        public IEnumerable<ReadOrderDto> GetOrdersForMerchant(string searchText, string merchantId, int statusId, int pageNumer, int pageSize)
+        {
+            if (statusId > 10 || statusId < 0)
+            {
+                return null!;
+            }
+            return _orderRepository.GetOrdersForMerchant(searchText,merchantId, statusId, pageNumer, pageSize).Select(o => new ReadOrderDto
+            {
+                Id= o.Id,
+                ClientName = o.ClientName,
+                Date = o.Date,
+                Governorate = o.Governorate!.Name,
+                City = o.City!.Name,
+                Cost = o.ProductTotalCost + o.OrderShippingTotalCost
+
+            });
+        }
+
+        //Employee and Merchant
+        public bool ChangeStatus(int OrderId, OrderStatus status)
+        {
+            var order = _orderRepository.GetById(OrderId);
+            if (order == null)
+            {
+                return false;
+            }
+            else
+            {
+                order.orderStatus = status;
+                _orderRepository.SaveChanges();
+                return true;
+            }
+        }
+
+        
+        //Representative
+        public List<int> CountOrdersForRepresentativeByStatus(string representativeId)
+        {
+            var listOrderStatus = _orderRepository.CountOrdersForRepresentativeByStatus(representativeId);
+            //size of enum
+            int[] countOrdres = new int[11];
+
+            var statusGroups = listOrderStatus.GroupBy(i => i);
+
+            foreach (var group in statusGroups)
+            {
+                countOrdres[group.Key] = group.Count();
+            }
+
+            int[] representativeStatus = new int[8];
+
+            Array.Copy(countOrdres, 2, representativeStatus, 0, 8);
+
+            return representativeStatus.ToList();
+        }
+        public int GetCountOrdersForRepresentative(string representativeId, int statusId, string searchText)
+        {
+            return _orderRepository.GetCountOrdersForRepresentative(representativeId, statusId, searchText);
+        }
+        public IEnumerable<ReadOrderDto> GetOrdersForRepresentative(string representativeId, int statusId, int pageNumer, int pageSize, string searchText)
+        {
+            return _orderRepository.GetOrdersForRepresentative(representativeId,statusId, pageNumer, pageSize, searchText).Select(o => new ReadOrderDto
+            {
+                Id = o.Id,
+                ClientName = o.ClientName,
+                Date = o.Date,
+                Governorate = o.Governorate!.Name,
+                City = o.City!.Name,
+                Cost = o.ProductTotalCost + o.OrderShippingTotalCost
+
+            });
+        }
+        public bool ChangeStatusAndReasonRefusal(int OrderId, OrderStatus status, int? reasonRefusal)
+        {
+            var order = _orderRepository.GetById(OrderId);
+            if (order == null)
+            {
+                return false;
+            }
+            else
+            {
+                order.orderStatus = status;
+                if (reasonRefusal != -1) { order.ReasonsRefusalTypeId = reasonRefusal; }
+                else { order.ReasonsRefusalTypeId = null; }
+                _orderRepository.SaveChanges();
+                return true;
+            }
+        }
+
+
+
+
         private async Task<double> CityShippingPrice(int cityId)
         {
             var result = await _cityRepository.GetByIdAsync(cityId);
@@ -413,188 +598,5 @@ namespace Shipping.BLL.Managers
             return totalPrice;
 
         }
-
-        //Employee
-        public List<int> CountOrdersForEmployeeByStatus()
-        {
-            var listOrderStatus = _orderRepository.CountOrdersForEmployeeByStatus();
-            int[] countOrdres = new int[11];//size of enum
-
-            var g = listOrderStatus.GroupBy(i => i);
-
-            foreach (var grp in g)
-            {
-                countOrdres[grp.Key] = grp.Count();
-            }
-            return countOrdres.ToList();
-        }
-        public int GetCountOrdersForEmployee(int statusId, string searchText)
-        {
-            if (statusId > 10 || statusId < 0)
-            {
-                return 0;
-            }
-            return _orderRepository.GetCountOrdersForEmployee(statusId,searchText);
-        }
-        public IEnumerable<ReadOrderDto> GetOrdersForEmployee(string searchText,int statusId, int pageNumer, int pageSize)
-        {
-            if (statusId > 10 || statusId < 0)
-            {
-                return null!;
-            }
-            return _orderRepository.GetOrdersForEmployee(searchText,statusId, pageNumer, pageSize).Select(o => new ReadOrderDto
-            {
-                Id=o.Id,
-                ClientName = o.ClientName,
-                Date = o.Date,
-                Governorate = o.Governorate!.Name,
-                City = o.City!.Name,
-                Cost = o.ProductTotalCost + o.OrderShippingTotalCost
-
-            });
-        }
-        public bool SelectRepresentative(int OrderId, string representativeId)
-        {
-            var order = _orderRepository.GetById(OrderId);
-            if (order == null)
-            {
-                return false;
-            }
-            else
-            {
-                order.RepresentativeId = representativeId;
-                order.orderStatus = OrderStatus.RepresentitiveDelivered;
-                _orderRepository.SaveChanges();
-                return true;
-            }
-        }
-        public async Task<List<DropdownListRepresentativeDto>> DropdownListRepresentativeAsync(int orderId)
-        {
-            var governorateId = _orderRepository.GetById(orderId)?.GovernorateId;
-
-            var representativeGovernate = await _representativeGovernateRepository.GetAllAsync();
-            var governorates = await _governorateRepository.GetAllAsync();
-            List<DropdownListRepresentativeDto> result = (from a in _userManager.Users
-                                                          join b in representativeGovernate  on a.Id equals b.RepresentativeId
-                                                          join c in governorates on b.GovernorateId equals governorateId
-                                                          select new DropdownListRepresentativeDto { Name = a.Name, Id = a.Id }).Distinct().ToList();
-
-
-            return result;
-
-
-        }
-        
-        //Merchant
-        public List<int> CountOrdersForMerchantByStatus(string merchantId)
-        {
-            var listOrderStatus = _orderRepository.CountOrdersForMerchantByStatus(merchantId);
-            int[] countOrdres = new int[11];//size of enum
-
-            var g = listOrderStatus.GroupBy(i => i);
-
-            foreach (var grp in g)
-            {
-                countOrdres[grp.Key] = grp.Count();
-            }
-            return countOrdres.ToList();
-        }
-        public int GetCountOrdersForMerchant(string merchantId, int statusId, string searchText)
-        {
-            if (statusId > 10 || statusId < 0)
-            {
-                return 0;
-            }
-            return _orderRepository.GetCountOrdersForMerchant(merchantId, statusId,searchText);
-        }
-        public IEnumerable<ReadOrderDto> GetOrdersForMerchant(string searchText, string merchantId, int statusId, int pageNumer, int pageSize)
-        {
-            if (statusId > 10 || statusId < 0)
-            {
-                return null!;
-            }
-            return _orderRepository.GetOrdersForMerchant(searchText,merchantId, statusId, pageNumer, pageSize).Select(o => new ReadOrderDto
-            {
-                Id= o.Id,
-                ClientName = o.ClientName,
-                Date = o.Date,
-                Governorate = o.Governorate!.Name,
-                City = o.City!.Name,
-                Cost = o.ProductTotalCost + o.OrderShippingTotalCost
-
-            });
-        }
-
-        //Employee and Merchant
-        public bool ChangeStatus(int OrderId, OrderStatus status)
-        {
-            var order = _orderRepository.GetById(OrderId);
-            if (order == null)
-            {
-                return false;
-            }
-            else
-            {
-                order.orderStatus = status;
-                _orderRepository.SaveChanges();
-                return true;
-            }
-        }
-
-        
-        //Representative
-        public List<int> CountOrdersForRepresentativeByStatus(string representativeId)
-        {
-            var listOrderStatus = _orderRepository.CountOrdersForRepresentativeByStatus(representativeId);
-            int[] countOrdres = new int[11];
-
-            var g = listOrderStatus.GroupBy(i => i);
-
-            foreach (var grp in g)
-            {
-                countOrdres[grp.Key] = grp.Count();
-            }
-
-            int[] result = new int[8];
-
-            Array.Copy(countOrdres, 2, result, 0, 8);
-
-            return result.ToList();
-        }
-        public int GetCountOrdersForRepresentative(string representativeId, int statusId, string searchText)
-        {
-            return _orderRepository.GetCountOrdersForRepresentative(representativeId, statusId, searchText);
-        }
-        public IEnumerable<ReadOrderDto> GetOrdersForRepresentative(string representativeId, int statusId, int pageNumer, int pageSize, string searchText)
-        {
-            return _orderRepository.GetOrdersForRepresentative(representativeId,statusId, pageNumer, pageSize, searchText).Select(o => new ReadOrderDto
-            {
-                Id = o.Id,
-                ClientName = o.ClientName,
-                Date = o.Date,
-                Governorate = o.Governorate!.Name,
-                City = o.City!.Name,
-                Cost = o.ProductTotalCost + o.OrderShippingTotalCost
-
-            });
-        }
-        public bool ChangeStatusAndReasonRefusal(int OrderId, OrderStatus status, int? reasonRefusal)
-        {
-            var order = _orderRepository.GetById(OrderId);
-            if (order == null)
-            {
-                return false;
-            }
-            else
-            {
-                order.orderStatus = status;
-                if (reasonRefusal != -1) { order.ReasonsRefusalTypeId = reasonRefusal; }
-                else { order.ReasonsRefusalTypeId = null; }
-                _orderRepository.SaveChanges();
-                return true;
-            }
-        }
-
-
     }
 }
