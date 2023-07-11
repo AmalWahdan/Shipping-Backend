@@ -29,6 +29,8 @@ namespace Shipping.BLL.Managers
         public async Task<int> DeleteEmployee(string employeeId)
         {
 
+            if (employeeId == "4372156e-b7ef-4fc3-aa82-9f50742f127d")
+                return -1;
 
             var employee = await _employeeRepo.GetByCriteriaAsync(e => e.Id == employeeId && !e.IsDeleted);
             if (employee == null)

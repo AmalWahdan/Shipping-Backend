@@ -43,10 +43,14 @@ namespace Shipping.API.Controllers
         public async Task<IActionResult> DeleteEmployee(string id)
         {
             var result = await _employeeManager.DeleteEmployee(id);
+
+            if (result == -1)
+                return Ok(new { Message = "Admin Can not be deleted" });
             if (result > 0)
             {
                 return Ok();
             }
+            
             return StatusCode(500);
         }
 

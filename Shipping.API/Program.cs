@@ -136,6 +136,16 @@ namespace Shipping.API
             var app = builder.Build();
             app.UseCors("AllowLocalhost");
 
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<ShippingContext>();
+                context.SeedData();
+                context.SaveChanges();
+            }
+
+
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

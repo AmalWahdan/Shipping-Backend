@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Shipping.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -190,13 +190,15 @@ namespace Shipping.DAL.Migrations
                 name: "GroupPermissions",
                 columns: table => new
                 {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Action = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     GroupId = table.Column<int>(type: "int", nullable: false),
-                    PermissionId = table.Column<int>(type: "int", nullable: false),
-                    Action = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PermissionId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GroupPermissions", x => new { x.GroupId, x.PermissionId });
+                    table.PrimaryKey("PK_GroupPermissions", x => x.id);
                     table.ForeignKey(
                         name: "FK_GroupPermissions_Groups_GroupId",
                         column: x => x.GroupId,
@@ -382,7 +384,8 @@ namespace Shipping.DAL.Migrations
                     OrderShippingTotalCost = table.Column<double>(type: "float", nullable: false),
                     Weight = table.Column<double>(type: "float", nullable: false),
                     ReasonsRefusalTypeId = table.Column<int>(type: "int", nullable: true),
-                    MerchantId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    MerchantId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RepresentativeId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -393,6 +396,11 @@ namespace Shipping.DAL.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Orders_AspNetUsers_RepresentativeId",
+                        column: x => x.RepresentativeId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Orders_Branches_BranchId",
                         column: x => x.BranchId,
@@ -508,9 +516,19 @@ namespace Shipping.DAL.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Branches",
+                columns: new[] { "Id", "DateTime", "Name", "isDeleted", "status" },
+                values: new object[] { 1, new DateTime(2023, 7, 12, 1, 7, 17, 740, DateTimeKind.Local).AddTicks(7290), "الفرع الرئيسي", false, true });
+
+            migrationBuilder.InsertData(
                 table: "DeliverToVillages",
                 columns: new[] { "Id", "AdditionalCost" },
-                values: new object[] { 1, 20.0 });
+                values: new object[] { 1, 10.0 });
+
+            migrationBuilder.InsertData(
+                table: "Groups",
+                columns: new[] { "Id", "Date", "IsDeleted", "Name" },
+                values: new object[] { 1, new DateTime(2023, 7, 12, 1, 7, 17, 747, DateTimeKind.Local).AddTicks(8437), false, "ادمن" });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
@@ -535,7 +553,66 @@ namespace Shipping.DAL.Migrations
             migrationBuilder.InsertData(
                 table: "Weights",
                 columns: new[] { "Id", "AdditionalPrice", "DefaultWeight" },
-                values: new object[] { 1, 30.0, 10.0 });
+                values: new object[] { 1, 5.0, 10.0 });
+
+            migrationBuilder.InsertData(
+                table: "GroupPermissions",
+                columns: new[] { "id", "Action", "GroupId", "PermissionId" },
+                values: new object[,]
+                {
+                    { 1, "Add", 1, 1 },
+                    { 2, "Edit", 1, 1 },
+                    { 3, "Delete", 1, 1 },
+                    { 4, "Show", 1, 1 },
+                    { 5, "Add", 1, 2 },
+                    { 6, "Edit", 1, 2 },
+                    { 7, "Delete", 1, 2 },
+                    { 8, "Show", 1, 2 },
+                    { 9, "Add", 1, 3 },
+                    { 10, "Edit", 1, 3 },
+                    { 11, "Delete", 1, 3 },
+                    { 12, "Show", 1, 3 },
+                    { 13, "Add", 1, 4 },
+                    { 14, "Edit", 1, 4 },
+                    { 15, "Delete", 1, 4 },
+                    { 16, "Show", 1, 4 },
+                    { 17, "Add", 1, 5 },
+                    { 18, "Edit", 1, 5 },
+                    { 19, "Delete", 1, 5 },
+                    { 20, "Show", 1, 5 },
+                    { 21, "Add", 1, 6 },
+                    { 22, "Edit", 1, 6 },
+                    { 23, "Delete", 1, 6 },
+                    { 24, "Show", 1, 6 },
+                    { 25, "Add", 1, 7 },
+                    { 26, "Edit", 1, 7 },
+                    { 27, "Delete", 1, 7 },
+                    { 28, "Show", 1, 7 },
+                    { 29, "Add", 1, 8 },
+                    { 30, "Edit", 1, 8 },
+                    { 31, "Delete", 1, 8 },
+                    { 32, "Show", 1, 8 },
+                    { 33, "Add", 1, 9 },
+                    { 34, "Edit", 1, 9 },
+                    { 35, "Delete", 1, 9 },
+                    { 36, "Show", 1, 9 },
+                    { 37, "Add", 1, 10 },
+                    { 38, "Edit", 1, 10 },
+                    { 39, "Delete", 1, 10 },
+                    { 40, "Show", 1, 10 },
+                    { 41, "Add", 1, 11 },
+                    { 42, "Edit", 1, 11 },
+                    { 43, "Delete", 1, 11 },
+                    { 44, "Show", 1, 11 },
+                    { 45, "Add", 1, 12 },
+                    { 46, "Edit", 1, 12 },
+                    { 47, "Delete", 1, 12 },
+                    { 48, "Show", 1, 12 },
+                    { 49, "Add", 1, 13 },
+                    { 50, "Edit", 1, 13 },
+                    { 51, "Delete", 1, 13 },
+                    { 52, "Show", 1, 13 }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -602,6 +679,11 @@ namespace Shipping.DAL.Migrations
                 column: "GovernorateId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_GroupPermissions_GroupId",
+                table: "GroupPermissions",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_GroupPermissions_PermissionId",
                 table: "GroupPermissions",
                 column: "PermissionId");
@@ -630,6 +712,11 @@ namespace Shipping.DAL.Migrations
                 name: "IX_Orders_ReasonsRefusalTypeId",
                 table: "Orders",
                 column: "ReasonsRefusalTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_RepresentativeId",
+                table: "Orders",
+                column: "RepresentativeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_ShippingTypeId",

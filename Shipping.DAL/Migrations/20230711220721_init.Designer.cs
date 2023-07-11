@@ -12,8 +12,8 @@ using Shipping.DAL.Data;
 namespace Shipping.DAL.Migrations
 {
     [DbContext(typeof(ShippingContext))]
-    [Migration("20230621223336_groupPermissionKey")]
-    partial class groupPermissionKey
+    [Migration("20230711220721_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -271,6 +271,16 @@ namespace Shipping.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Branches");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DateTime = new DateTime(2023, 7, 12, 1, 7, 17, 740, DateTimeKind.Local).AddTicks(7290),
+                            Name = "الفرع الرئيسي",
+                            isDeleted = false,
+                            status = true
+                        });
                 });
 
             modelBuilder.Entity("Shipping.DAL.Data.Models.City", b =>
@@ -323,7 +333,7 @@ namespace Shipping.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            AdditionalCost = 20.0
+                            AdditionalCost = 10.0
                         });
                 });
 
@@ -368,6 +378,15 @@ namespace Shipping.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Groups");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Date = new DateTime(2023, 7, 12, 1, 7, 17, 747, DateTimeKind.Local).AddTicks(8437),
+                            IsDeleted = false,
+                            Name = "ادمن"
+                        });
                 });
 
             modelBuilder.Entity("Shipping.DAL.Data.Models.GroupPermission", b =>
@@ -395,6 +414,372 @@ namespace Shipping.DAL.Migrations
                     b.HasIndex("PermissionId");
 
                     b.ToTable("GroupPermissions");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            Action = "Add",
+                            GroupId = 1,
+                            PermissionId = 1
+                        },
+                        new
+                        {
+                            id = 2,
+                            Action = "Edit",
+                            GroupId = 1,
+                            PermissionId = 1
+                        },
+                        new
+                        {
+                            id = 3,
+                            Action = "Delete",
+                            GroupId = 1,
+                            PermissionId = 1
+                        },
+                        new
+                        {
+                            id = 4,
+                            Action = "Show",
+                            GroupId = 1,
+                            PermissionId = 1
+                        },
+                        new
+                        {
+                            id = 5,
+                            Action = "Add",
+                            GroupId = 1,
+                            PermissionId = 2
+                        },
+                        new
+                        {
+                            id = 6,
+                            Action = "Edit",
+                            GroupId = 1,
+                            PermissionId = 2
+                        },
+                        new
+                        {
+                            id = 7,
+                            Action = "Delete",
+                            GroupId = 1,
+                            PermissionId = 2
+                        },
+                        new
+                        {
+                            id = 8,
+                            Action = "Show",
+                            GroupId = 1,
+                            PermissionId = 2
+                        },
+                        new
+                        {
+                            id = 9,
+                            Action = "Add",
+                            GroupId = 1,
+                            PermissionId = 3
+                        },
+                        new
+                        {
+                            id = 10,
+                            Action = "Edit",
+                            GroupId = 1,
+                            PermissionId = 3
+                        },
+                        new
+                        {
+                            id = 11,
+                            Action = "Delete",
+                            GroupId = 1,
+                            PermissionId = 3
+                        },
+                        new
+                        {
+                            id = 12,
+                            Action = "Show",
+                            GroupId = 1,
+                            PermissionId = 3
+                        },
+                        new
+                        {
+                            id = 13,
+                            Action = "Add",
+                            GroupId = 1,
+                            PermissionId = 4
+                        },
+                        new
+                        {
+                            id = 14,
+                            Action = "Edit",
+                            GroupId = 1,
+                            PermissionId = 4
+                        },
+                        new
+                        {
+                            id = 15,
+                            Action = "Delete",
+                            GroupId = 1,
+                            PermissionId = 4
+                        },
+                        new
+                        {
+                            id = 16,
+                            Action = "Show",
+                            GroupId = 1,
+                            PermissionId = 4
+                        },
+                        new
+                        {
+                            id = 17,
+                            Action = "Add",
+                            GroupId = 1,
+                            PermissionId = 5
+                        },
+                        new
+                        {
+                            id = 18,
+                            Action = "Edit",
+                            GroupId = 1,
+                            PermissionId = 5
+                        },
+                        new
+                        {
+                            id = 19,
+                            Action = "Delete",
+                            GroupId = 1,
+                            PermissionId = 5
+                        },
+                        new
+                        {
+                            id = 20,
+                            Action = "Show",
+                            GroupId = 1,
+                            PermissionId = 5
+                        },
+                        new
+                        {
+                            id = 21,
+                            Action = "Add",
+                            GroupId = 1,
+                            PermissionId = 6
+                        },
+                        new
+                        {
+                            id = 22,
+                            Action = "Edit",
+                            GroupId = 1,
+                            PermissionId = 6
+                        },
+                        new
+                        {
+                            id = 23,
+                            Action = "Delete",
+                            GroupId = 1,
+                            PermissionId = 6
+                        },
+                        new
+                        {
+                            id = 24,
+                            Action = "Show",
+                            GroupId = 1,
+                            PermissionId = 6
+                        },
+                        new
+                        {
+                            id = 25,
+                            Action = "Add",
+                            GroupId = 1,
+                            PermissionId = 7
+                        },
+                        new
+                        {
+                            id = 26,
+                            Action = "Edit",
+                            GroupId = 1,
+                            PermissionId = 7
+                        },
+                        new
+                        {
+                            id = 27,
+                            Action = "Delete",
+                            GroupId = 1,
+                            PermissionId = 7
+                        },
+                        new
+                        {
+                            id = 28,
+                            Action = "Show",
+                            GroupId = 1,
+                            PermissionId = 7
+                        },
+                        new
+                        {
+                            id = 29,
+                            Action = "Add",
+                            GroupId = 1,
+                            PermissionId = 8
+                        },
+                        new
+                        {
+                            id = 30,
+                            Action = "Edit",
+                            GroupId = 1,
+                            PermissionId = 8
+                        },
+                        new
+                        {
+                            id = 31,
+                            Action = "Delete",
+                            GroupId = 1,
+                            PermissionId = 8
+                        },
+                        new
+                        {
+                            id = 32,
+                            Action = "Show",
+                            GroupId = 1,
+                            PermissionId = 8
+                        },
+                        new
+                        {
+                            id = 33,
+                            Action = "Add",
+                            GroupId = 1,
+                            PermissionId = 9
+                        },
+                        new
+                        {
+                            id = 34,
+                            Action = "Edit",
+                            GroupId = 1,
+                            PermissionId = 9
+                        },
+                        new
+                        {
+                            id = 35,
+                            Action = "Delete",
+                            GroupId = 1,
+                            PermissionId = 9
+                        },
+                        new
+                        {
+                            id = 36,
+                            Action = "Show",
+                            GroupId = 1,
+                            PermissionId = 9
+                        },
+                        new
+                        {
+                            id = 37,
+                            Action = "Add",
+                            GroupId = 1,
+                            PermissionId = 10
+                        },
+                        new
+                        {
+                            id = 38,
+                            Action = "Edit",
+                            GroupId = 1,
+                            PermissionId = 10
+                        },
+                        new
+                        {
+                            id = 39,
+                            Action = "Delete",
+                            GroupId = 1,
+                            PermissionId = 10
+                        },
+                        new
+                        {
+                            id = 40,
+                            Action = "Show",
+                            GroupId = 1,
+                            PermissionId = 10
+                        },
+                        new
+                        {
+                            id = 41,
+                            Action = "Add",
+                            GroupId = 1,
+                            PermissionId = 11
+                        },
+                        new
+                        {
+                            id = 42,
+                            Action = "Edit",
+                            GroupId = 1,
+                            PermissionId = 11
+                        },
+                        new
+                        {
+                            id = 43,
+                            Action = "Delete",
+                            GroupId = 1,
+                            PermissionId = 11
+                        },
+                        new
+                        {
+                            id = 44,
+                            Action = "Show",
+                            GroupId = 1,
+                            PermissionId = 11
+                        },
+                        new
+                        {
+                            id = 45,
+                            Action = "Add",
+                            GroupId = 1,
+                            PermissionId = 12
+                        },
+                        new
+                        {
+                            id = 46,
+                            Action = "Edit",
+                            GroupId = 1,
+                            PermissionId = 12
+                        },
+                        new
+                        {
+                            id = 47,
+                            Action = "Delete",
+                            GroupId = 1,
+                            PermissionId = 12
+                        },
+                        new
+                        {
+                            id = 48,
+                            Action = "Show",
+                            GroupId = 1,
+                            PermissionId = 12
+                        },
+                        new
+                        {
+                            id = 49,
+                            Action = "Add",
+                            GroupId = 1,
+                            PermissionId = 13
+                        },
+                        new
+                        {
+                            id = 50,
+                            Action = "Edit",
+                            GroupId = 1,
+                            PermissionId = 13
+                        },
+                        new
+                        {
+                            id = 51,
+                            Action = "Delete",
+                            GroupId = 1,
+                            PermissionId = 13
+                        },
+                        new
+                        {
+                            id = 52,
+                            Action = "Show",
+                            GroupId = 1,
+                            PermissionId = 13
+                        });
                 });
 
             modelBuilder.Entity("Shipping.DAL.Data.Models.Order", b =>
@@ -737,7 +1122,7 @@ namespace Shipping.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            AdditionalPrice = 30.0,
+                            AdditionalPrice = 5.0,
                             DefaultWeight = 10.0
                         });
                 });
